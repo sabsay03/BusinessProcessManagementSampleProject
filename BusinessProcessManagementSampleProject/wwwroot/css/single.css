@@ -1,0 +1,27 @@
+body a:hover {
+    text-decoration: none;
+}
+
+.card-body {
+    padding: 8px;
+    border-bottom: 10px groove dimgrey;
+    background-color: lightblue;
+    border-radius: 10px;
+    margin: 15px;
+
+}
+
+.card-header {
+    padding:10px;
+    color: #0e0f10;
+}
+
+.card-Button {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.MainScreen {
+  margin-left:180px;
+  }

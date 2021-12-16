@@ -1,0 +1,31 @@
+﻿@model EntityLayer.Concrete.User
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>  
+    @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+    {
+        <link href="~/css/Login.css" rel="stylesheet" />
+        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+        <div class="logo"></div>
+        <div class="login-block">Kocaeli Üniversitesi İş Yönetim Sistemi</div>
+        <div class="login-block">
+            <h1>Login</h1>
+            @Html.TextBoxFor(a => a.UserName, new { placeholder = "Kullanıcı Adı" })
+            @Html.PasswordFor(a => a.Password, new { @class = "form-control", placeholder = "Şifre" })
+
+            <button value="Login" type="submit">Giriş Yap</button>
+        </div>
+
+    }
+</body>
+
+</html>
