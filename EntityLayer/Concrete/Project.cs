@@ -14,9 +14,14 @@ namespace EntityLayer.Concrete
         public int Id { get; set; }
         public string Title { get; set; }
         public string Explanation { get; set; }
-        public ICollection<ProjectMember> ProjectMembers { get; set; }
-        public ICollection<Group> Groups { get; set; }
+        public int ManagerId { get; set; }
+        public string Status { get; set; }
+        public User Manager { get; set; }
 
+
+        public ICollection<ProjectMember> ProjectMembers { get; set; }
+
+        public IList<Mission> Tasks { get; set; }
 
 
     }

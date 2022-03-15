@@ -17,13 +17,11 @@ namespace EntityLayer.Concrete
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Title { get; set; }
-        public int ManagerId { get; set; }
-        public User Manager { get; set; }
         public bool IsApproved { get; set; }
 
        // List
         public ICollection<Comment> Comments { get; set; }
-        public int GroupId { get; set; }
-        public Group Group { get; set; }
+        public int ProjectId { get; set; }
+        public Project Project { get; set; }
     }
 }

@@ -1,0 +1,65 @@
+﻿@model UserRegisterViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <link href="~/css/single.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/web/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/fontawesome-all.css" rel="stylesheet" />
+    <link href="//fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
+          rel="stylesheet">
+</head>
+<body>
+
+    <section class="main-content-w3layouts-agileits">
+        <div class="container">
+            <h3 class="tittle">Üye Ol</h3>
+            <div class="inner-sec">
+                <div class="login p-5 bg-light mx-auto mw-100">
+                    <form role="form" asp-action="Register">
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                                <input type="text" class="form-control" asp-for="@Model.FirstName" placeholder="Adınızı Girininiz" >
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                                <input type="text" class="form-control" asp-for="@Model.LastName" placeholder="Soyadını Giriniz" >
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <span asp-validation-for="@Model.Mail" class="text-danger"></span>
+                                <input type="email" class="form-control" asp-for="@Model.Mail" placeholder="Mailinizi Girininiz" >
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                                <input type="text" class="form-control" asp-for="@Model.UserName" placeholder="Kullanıcı Adını Giriniz" >
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                                <input type="password" class="form-control" asp-for="@Model.Password" placeholder="Şifre Giriniz" >
+                            </div>
+                            <div class="form-group col-md-6">
+                                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                                <input type="password" class="form-control" asp-for="@Model.ConfirmPassword" placeholder="Şifre Onay" >
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit mb-4">Üye Ol</button>
+                    </form>
+
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

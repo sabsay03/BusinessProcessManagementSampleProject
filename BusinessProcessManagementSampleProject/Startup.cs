@@ -1,8 +1,11 @@
+using DataAccessLayer.Concrete;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +29,11 @@ namespace BusinessProcessManagementSampleProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddDbContext<Context>();
+
+            services.AddIdentity<User, Role>().
+                AddEntityFrameworkStores<Context>();
 
             services.AddMvc(config =>
             {
@@ -42,7 +49,7 @@ namespace BusinessProcessManagementSampleProject
                 .AddCookie(x =>
 
                 {
-                    x.LoginPath = "/Login/Index";
+                    x.LoginPath = "/Accout/Login";
 
                 }
                 );

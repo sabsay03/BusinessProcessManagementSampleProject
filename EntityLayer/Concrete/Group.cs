@@ -17,8 +17,6 @@ namespace EntityLayer.Concrete
 
         public int ProjectId { get; set; }
         public Project Poject { get; set; }
-
-        public IList<GroupMember> GroupMembers { get; set; }
         public IList<Mission> Tasks { get; set; }
 
 

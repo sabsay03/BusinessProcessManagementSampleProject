@@ -20,32 +20,32 @@ namespace BusinessProcessManagementSampleProject.Controllers
             return View();
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Index(User u)
-        {
-            {
-                Context c = new Context();
-                var dataValue = c.Users.FirstOrDefault(x => x.UserName == u.UserName && x.Password == u.Password);
-                if (dataValue != null)
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, u.UserName)
-                        };
-                    var useridentity = new ClaimsIdentity(claims, "a");
-                    ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
-                    await HttpContext.SignInAsync(principal);
-                    return RedirectToAction("Index", "Group");
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Index(User u)
+        //{
+        //    {
+        //        Context c = new Context();
+        //        var dataValue = c.Users.FirstOrDefault(x => x.UserName == u.UserName && x.Password == u.Password);
+        //        if (dataValue != null)
+        //        {
+        //            var claims = new List<Claim>
+        //            {
+        //                new Claim(ClaimTypes.Name, u.UserName)
+        //                };
+        //            var useridentity = new ClaimsIdentity(claims, "a");
+        //            ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
+        //            await HttpContext.SignInAsync(principal);
+        //            return RedirectToAction("Index", "Group");
 
 
-                }
-                else
-                {
-                    return View();
-                }
+        //        }
+        //        else
+        //        {
+        //            return View();
+        //        }
 
-            }
-        }
+        //    }
+        //}
     }
 }

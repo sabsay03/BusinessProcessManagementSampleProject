@@ -15,13 +15,10 @@ namespace BusinessProcessManagementSampleProject.Controllers
     public class GroupController : Controller
     {
         
-        GroupManager gm = new GroupManager(new EfGroupRepo());
         [AllowAnonymous]
         public ActionResult Index()
         {
-            
-            var values = gm.GetListByProject();
-            return View(values);
+            return View();
         }
 
         // GET: GroupController/Details/5
