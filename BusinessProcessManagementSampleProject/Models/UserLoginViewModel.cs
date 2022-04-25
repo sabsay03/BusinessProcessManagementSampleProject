@@ -16,5 +16,7 @@ namespace BusinessProcessManagementSampleProject.Models
         [Required(ErrorMessage = "Lütfen Şifre Giriniz")]
         public string Password { get; set; }
 
+        public bool RememberMe { get; set; }
+
     }
 }

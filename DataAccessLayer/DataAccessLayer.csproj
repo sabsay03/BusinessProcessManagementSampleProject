@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Compile Remove="Abstract\IGroupDal.cs" />
-    <Compile Remove="EntitiyFrameWork\EfGroupRepo.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="PagedList.Core" Version="1.17.4" />
   </ItemGroup>
 
   <ItemGroup>

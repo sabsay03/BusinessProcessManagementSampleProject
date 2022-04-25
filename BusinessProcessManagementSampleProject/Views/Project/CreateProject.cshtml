@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewData["Title"] = "CreateProject";
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+@model BusinessProcessManagementSampleProject.Models.Project.ProjectCreateViewModel
+
+<div class="col-12">
+    <div class="rosettaGuideTxt">
+        @if (TempData["successCreateOrEdit"] != null)
+        {
+            if ((bool)TempData["successCreateOrEdit"] == true)
+            {
+                <p class="alert alert-success">@TempData["messageCreateOrEdit"]</p>
+            }
+            else
+            {
+                <p class="alert alert-danger">@TempData["messageCreateOrEdit"]</p>
+            }
+
+        }
+    </div>
+</div>
+<div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+<div class="bg-white w-100 shadow p-3">
+    <h3 class="text-center">Proje Ekle</h3>
+    <form asp-controller="Project" asp-action="CreateProject" method="POST">
+        <div class="form-group">
+            <input type="text" class="form-control" asp-for=Id id="inputTitle" hidden>
+        </div>
+
+        <div class="form-group">
+            <label for="inputUserName" class="font-weight-bold">Başlık</label>
+            <input type="text" class="form-control" asp-for=Title id="inputTitle" requried>
+            <span asp-validation-for="@Model.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="inputUserName" class="font-weight-bold">Açıklama</label>
+            <input type="text" class="form-control" asp-for=Description id="inputTitle" requried>
+            <span asp-validation-for="@Model.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="inputUserName" class="font-weight-bold">Başlangıç Tarihi</label>
+            <input type="date" class="form-control" asp-for=StartDate id="inputTitle" requried>
+            <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="inputUserName" class="font-weight-bold">Bitiş Tarihi</label>
+            <input type="date" class="form-control" asp-for=EndDate id="inputTitle" requried>
+            <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100"><h3>Oluştur</h3></button>
+    </form>
+</div>

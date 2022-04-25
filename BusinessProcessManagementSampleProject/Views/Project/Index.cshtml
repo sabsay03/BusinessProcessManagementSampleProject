@@ -1,0 +1,38 @@
+﻿@using PagedList.Core
+@using PagedList.Core.Mvc
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+@model BusinessProcessManagementSampleProject.Models.Project.ListProjectsViewModel
+
+<h3>Projeler</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Başlık</th>
+            <th scope="col">Başlangıç Tarihi</th>
+            <th scope="col">Bitiş Tarihi</th>
+            <th scope="col">Durumu</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var project in Model.Projects)
+            {
+                <tr>
+                    <td>@project.Title</td>
+                    <td>@project.StartDate.ToString("dd MMM yyyy HH:mm")</td>
+                    <td> @project.EndDate.ToString("dd MMM yyyy HH:mm")</td>
+                    <th scope="col">@project.ProjectStatus</th>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+    <div class=" col-8">
+        <td colspan="3" align="center">
+            <pager list="@Model.Projects" asp-controller="Project" asp-action="Index" />
+        </td>
+    </div>

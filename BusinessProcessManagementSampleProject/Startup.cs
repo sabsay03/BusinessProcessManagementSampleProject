@@ -1,5 +1,9 @@
+using BusinessLayer.Handler;
 using DataAccessLayer.Concrete;
+using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
+using EntityLayer.Handler;
+using EntityLayer.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -43,6 +47,8 @@ namespace BusinessProcessManagementSampleProject
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IProjectHandler, ProjectHandler>();
             services.AddMvc();
             services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)
@@ -81,7 +87,7 @@ namespace BusinessProcessManagementSampleProject
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

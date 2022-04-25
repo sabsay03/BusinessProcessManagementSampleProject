@@ -7,18 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VeriPark.DigitalBadge.Business;
 
 namespace BusinessProcessManagementSampleProject.Controllers
 {
     [AllowAnonymous]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
 
         private readonly UserManager<User> userManager;
 
         private readonly SignInManager<User> signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager):base()
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -64,6 +65,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated) return LocalRedirect("/Project/CreateProject");
             return View();
         }
 
@@ -72,8 +74,8 @@ namespace BusinessProcessManagementSampleProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(u.UserName, u.Password, true, lockoutOnFailure:false);
-
+                var result = await signInManager.PasswordSignInAsync(u.UserName, u.Password, u.RememberMe, lockoutOnFailure:false);
+               
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Project");
@@ -86,5 +88,12 @@ namespace BusinessProcessManagementSampleProject.Controllers
             }
             return View();
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
+
     }
 }

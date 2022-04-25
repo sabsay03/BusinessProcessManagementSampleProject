@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete.Relations;
+using EntityLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,11 +14,14 @@ namespace EntityLayer.Concrete
         [Key]
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Explanation { get; set; }
-        public int ManagerId { get; set; }
-        public string Status { get; set; }
-        public User Manager { get; set; }
+        public string Description { get; set; }
 
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int ManagerId { get; set; }
+        public User Manager { get; set; }
+        public ProjectStatus ProjectStatus { get; set; } 
+        public DateTime CreateDate { get; set; }
 
         public ICollection<ProjectMember> ProjectMembers { get; set; }
 
