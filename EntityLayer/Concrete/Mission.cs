@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityLayer.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,13 +14,12 @@ namespace EntityLayer.Concrete
         public int Id { get; set; }
         public int? MemberId{ get; set; }
         public User Member { get; set; }
-        public string  Status { get; set; }
+        public MissionStatus  MissionStatus { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Title { get; set; }
-        public bool IsApproved { get; set; }
-
-       // List
+        public string Description { get; set; }
+        // List
         public ICollection<Comment> Comments { get; set; }
         public int ProjectId { get; set; }
         public Project Project { get; set; }

@@ -1,53 +1,82 @@
-﻿using BusinessProcessManagementSampleProject.Models.Project;
+﻿using BusinessLayer.Helpers;
+using BusinessProcessManagementSampleProject.Models;
+using BusinessProcessManagementSampleProject.Models.Project;
 using EntityLayer.Handler;
 using EntityLayer.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using VeriPark.DigitalBadge.Business;
 
 namespace BusinessProcessManagementSampleProject.Controllers
 {
     public class ProjectController : BaseController
     {
         public readonly IProjectHandler projectHandler;
+        public readonly IUserHandler userHandler;
+        private readonly DropDownHelper dropDownHelper;
 
-        public ProjectController(IProjectHandler projectHandler):base()
+        public ProjectController(IProjectHandler projectHandler,DropDownHelper dropDownHelper,IUserHandler userHandler):base()
         {
             this.projectHandler = projectHandler;
+            this.dropDownHelper = dropDownHelper;
+            this.userHandler = userHandler;
+        }
+        [HttpGet]
+        public ActionResult CreateProjectMember()
+        {
+            ViewBag.ProjectSelectListItems = dropDownHelper.ProjectSelectListByManager(GetCurrentId());
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CreateProjectMember(ProjectMemberCreateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var member = userHandler.GetUserByStudenNo(model.StudentNo);
+                var projectMemberModel = new ProjectMemberModel { MemberId = member.Id, ProjecId = model.ProjecId };
+                var response = projectHandler.AddStudenToProject(projectMemberModel);
+                TempData["messageCreateOrEdit"] = response.Message;
+                TempData["successCreateOrEdit"] = response.Success;
+                return View();
+            }
+            ViewBag.ProjectSelectListItems = dropDownHelper.ProjectSelectListByManager(GetCurrentId());
+            ModelState.AddModelError("", "Öğrenci Ekleme Başarısız.");
+            return View(model);
         }
 
-        // GET: ProjectController
-
-
-        public ActionResult Index(int? pageNumber, string currentFilter, string name)
+        public IActionResult GetMyViewComponent(int projectId,int page)
         {
+            return ViewComponent("MembersListForDetail",new {projectId=projectId,page=page,pagesize=1});
+        }
+
+        public ActionResult Index(int? page, string currentFilter, string name)
+        {
+            var currentState = GetCurrentActionState();
             ViewBag.name = name;
-            var badgeList = projectHandler.GetProjectsForManager(GetCurrentId(), pageNumber ?? 1, _pageSize, name);
+            var badgeList = projectHandler.GetProjectsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
 
             if (name != null)
-                pageNumber = 1;
+                page = 1;
             else
                 name = currentFilter;
 
             ViewBag.CurrentFilter = name;
 
-            var viewModel = new ListProjectsViewModel { Projects = badgeList };
+            var viewModel = new ListProjectsViewModel { Projects = badgeList,ActionResponse=currentState };
 
             return View(viewModel);
         }
 
         // GET: ProjectController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Detail(int projectId)
         {
-            return View();
-        }
+            var project=projectHandler.GetProjectDetailById(projectId);
 
+            var users = projectHandler.GetMembersOfProject(projectId, 1, _pageSize,null);
+            var viewModel = new ProjectDetailViewModel { Project = project};
+
+            return View(viewModel);
+        }
         // GET: ProjectController/Create
         public ActionResult CreateProject(int? id)
         {
@@ -110,25 +139,34 @@ namespace BusinessProcessManagementSampleProject.Controllers
             return View(model);
         }
 
-        // GET: ProjectController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProjectController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id)
         {
             try
             {
+                projectHandler.DeleteProject(id);
+
+                SetCurrentActionState(ActionType.Delete,"Proje İptal Edilmiştir");
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        private void SetCurrentActionState(ActionType actionType, string actionResult)
+        {
+            TempData["AdminViewModel"] =JsonConvert.SerializeObject(new ActionResponse { ActionType = actionType, ActionMessage = actionResult });
+        }
+
+        private ActionResponse GetCurrentActionState()
+        {
+            if (TempData["AdminViewModel"] != null)
+                return TempData["AdminViewModel"] as ActionResponse;
+
+            else return null;
         }
     }
 }

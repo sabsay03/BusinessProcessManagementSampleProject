@@ -1,4 +1,5 @@
-﻿using BusinessProcessManagementSampleProject.Models;
+﻿using BusinessLayer.Helpers;
+using BusinessProcessManagementSampleProject.Models;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VeriPark.DigitalBadge.Business;
 
 namespace BusinessProcessManagementSampleProject.Controllers
 {
@@ -41,7 +41,9 @@ namespace BusinessProcessManagementSampleProject.Controllers
                     Email = model.Mail,
                     UserName = model.UserName,
                     FirstName = model.FirstName,
-                    LastName = model.LastName
+                    LastName = model.LastName,
+                    StudentNumber=model.StudentNumber
+                   
                 };
 
                 var result = await userManager.CreateAsync(user,model.Password);

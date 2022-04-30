@@ -14,7 +14,7 @@ namespace DataAccessLayer.Concrete
     {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlServer("server=LAPTOP-DACKTG5J\\SQLEXPRESS;database=BpmDb; integrated security=true");
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;;database=BpmDb;integrated security=true");
         }
 
         public DbSet<Comment> Comments { get; set; }
@@ -22,6 +22,7 @@ namespace DataAccessLayer.Concrete
         public DbSet<Mission> Tasks { get; set; }
         public DbSet<ProjectMember> ProjectMembers { get; set; }
 
+        //public DbSet<ProjectRequest> ProjectRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {

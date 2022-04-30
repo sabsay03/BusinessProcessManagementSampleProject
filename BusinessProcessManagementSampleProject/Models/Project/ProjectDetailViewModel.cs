@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace BusinessProcessManagementSampleProject.Models.Project
 {
-    public class ListProjectsViewModel
+    public class ProjectDetailViewModel
     {
-        public IPagedList<ProjectModel> Projects { get; set; }
-        public ActionResponse ActionResponse { get; set; }
+        public ProjectModel Project { get; set; }
 
+        public ListProjectMemberViewModel Members { get; set; }
+        public ActionResponse ActionResponse { get; set; }
     }
 }

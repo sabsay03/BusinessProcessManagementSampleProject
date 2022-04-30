@@ -1,0 +1,45 @@
+﻿@model BusinessProcessManagementSampleProject.Models.Project.ProjectMemberCreateViewModel
+
+@{
+    ViewData["Title"] = "CreateProjectMember";
+}
+
+<div class="col-12">
+    <div class="rosettaGuideTxt">
+        @if (TempData["successCreateOrEdit"] != null)
+        {
+            if ((bool)TempData["successCreateOrEdit"] == true)
+            {
+                <p class="alert alert-success">@TempData["messageCreateOrEdit"]</p>
+            }
+            else
+            {
+                <p class="alert alert-danger">@TempData["messageCreateOrEdit"]</p>
+            }
+
+        }
+    </div>
+</div>
+<div class="bg-white w-100 shadow p-3">
+    <h3 class="text-center">Proje Ekle</h3>
+    <form asp-controller="Project" asp-action="CreateProjectMember" method="POST">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="StudentNo" class="control-label"></label>
+            <input asp-for="StudentNo" class="form-control" />
+            <span asp-validation-for="StudentNo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="FullName" class="control-label"></label>
+            <input asp-for="FullName" class="form-control" disabled />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProjecId" class="control-label"></label>
+            <select asp-for="ProjecId" asp-items="ViewBag.ProjectSelectListItems" class="form-control" ></select>
+            <span asp-validation-for="ProjecId" class="text-danger"></span>
+        </div>
+            <button type="submit" class="btn btn-success w-100"><h3>Ekle</h3></button>
+    </form>
+</div>
+

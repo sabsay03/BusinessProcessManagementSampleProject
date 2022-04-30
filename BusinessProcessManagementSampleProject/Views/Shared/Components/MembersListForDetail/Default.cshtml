@@ -1,0 +1,68 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
+
+@model BusinessProcessManagementSampleProject.Models.Project.ListProjectMemberViewModel
+<link href="~/css/site.css" rel="stylesheet" />
+@if ((Model.Members?.Count() ?? 0) <= 0)
+{
+    <ul>
+        <li>Aradığınız kriterlere göre kullanıcı bulunmamaktadır.</li>
+    </ul>
+}
+<div>
+    @if (Model.ActionResponse?.ActionType != null)
+    {
+        <p class="alert-info">@Model.ActionResponse.ActionMessage</p>
+    }
+</div>
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Adı Soyadı</th>
+                <th scope="col">Öğrenci No</th>
+                <th scope="col">İstatistik</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var member in Model.Members)
+                {
+                    <tr>
+                        <td>@member.UserFullName</td>
+                        <td>@member.StudentNo</td>
+                        <th>
+                            <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Project", new { member.Id })'" />
+
+                            <form id="removeBadgeForm-@member.Id" method="post" action="~/Project/Delete/@member.Id">
+                                <a href="#" onclick="removeProject(@member.Id)"><i class="delete" data-toggle="tooltip" title="Sil">iptal</i></a>
+                            </form>
+                        </th>
+
+                    </tr>
+                }
+            }
+        </tbody>
+        @Model.CurrentPageIndex. Sayfadasınız
+    </table>
+
+    <ul class="pagination float-right">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <li>
+                @if (i != Model.CurrentPageIndex)
+                {
+                    <a href="javascript:PagerClick(@i);">@i</a>
+                }
+                else
+                {
+                    <a class="active"><span>@i</span></a>
+                }
+            </li>
+        }
+    </ul>
+
+    <button type="submit" class="btn btn-success w-100" onclick="location.href='@Url.Action("CreateProjectMember","Project")'"><h3>Yeni Öğrenci Ekle</h3></button>
+</div>
+<input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">

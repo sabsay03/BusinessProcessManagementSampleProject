@@ -1,4 +1,5 @@
-﻿using EntityLayer.Enums;
+﻿using EntityLayer.Concrete;
+using EntityLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace EntityLayer.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public ProjectStatus ProjectStatus { get; set; }
+
+        public string ProjectStatusString { get; set; }
         public DateTime CreateDate { get; set; }
+        public User Manager { get; set; }
+
+
     }
 }

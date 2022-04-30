@@ -1,4 +1,5 @@
 using BusinessLayer.Handler;
+using BusinessLayer.Helpers;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
@@ -48,7 +49,13 @@ namespace BusinessProcessManagementSampleProject
             });
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IMissionRepository, MissionRepository>();
             services.AddScoped<IProjectHandler, ProjectHandler>();
+            services.AddScoped<IUserHandler, UserHandler>();
+            services.AddScoped<IMissionHandler, MissionHandler>();
+            services.AddScoped<DropDownHelper>();
             services.AddMvc();
             services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)

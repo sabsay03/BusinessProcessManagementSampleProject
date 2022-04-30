@@ -25,11 +25,15 @@
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
-                                <input type="text" class="form-control" asp-for="@Model.FirstName" placeholder="Adınızı Girininiz" >
+                                <input type="text" class="form-control" asp-for="@Model.FirstName" placeholder="Adınızı Girininiz">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <span asp-validation-for="@Model.StudentNumber" class="text-danger"></span>
+                                <input type="text" class="form-control" asp-for="@Model.StudentNumber" placeholder="Okul Numaranızı Girininiz">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <span asp-validation-for="@Model.LastName" class="text-danger"></span>
-                                <input type="text" class="form-control" asp-for="@Model.LastName" placeholder="Soyadını Giriniz" >
+                                <input type="text" class="form-control" asp-for="@Model.LastName" placeholder="Soyadını Giriniz">
                             </div>
                         </div>
                         <div class="form-row">

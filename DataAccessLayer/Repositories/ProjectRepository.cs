@@ -19,15 +19,21 @@ namespace DataAccessLayer.Repositories
             int userid = Convert.ToInt32(id);
             using (Context databaseContext = new Context())
             {
-                return databaseContext.Projects.Where(p => p.Id == userid).FirstOrDefault();
+                return databaseContext.Projects.Include(p=>p.ProjectMembers).Include(p=>p.Manager).Where(p => p.Id == userid).FirstOrDefault();
+            
+
             }
         }
 
-        public Project GetByTitle(int id,string title, int managerId)
+        public Project GetByTitle(string title, int managerId,int id)
         {
             using (Context databaseContext = new Context())
             {
-                return databaseContext.Projects.FirstOrDefault(p =>p.Id!=id && p.Title==title && p.ManagerId==id && p.ProjectStatus!=EntityLayer.Enums.ProjectStatus.Cancel);
+                if (id == 0)
+                    return databaseContext.Projects.Where(p =>p.Title == title && p.ManagerId == managerId && p.ProjectStatus != EntityLayer.Enums.ProjectStatus.Cancel).FirstOrDefault();
+
+                else
+                    return databaseContext.Projects.FirstOrDefault(p => p.Id != id && p.Title == title && p.ManagerId == managerId && p.ProjectStatus != EntityLayer.Enums.ProjectStatus.Cancel);
             }
         }
 
@@ -96,6 +102,28 @@ namespace DataAccessLayer.Repositories
                         );
 
                 return query.OrderBy(p => p.Id).ToPagedList(pagenumber, pageSize);
+            }
+        }
+
+        public int DeleteProject(int id)
+        {
+            int userid = Convert.ToInt32(id);
+            using (Context databaseContext = new Context())
+            {
+                var project = GetById(id);
+                databaseContext.Projects.Attach(project);
+                project.ProjectStatus = EntityLayer.Enums.ProjectStatus.Cancel;
+                databaseContext.SaveChanges();
+                return id;
+
+            }
+        }
+
+        public List<Project> GetActiveProjects(int? managerId)
+        {
+            using (var databaseContext = new Context())
+            {
+                return databaseContext.Projects.Where(p => p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Active && p.ManagerId == managerId).OrderBy(p => p.Id).ToList();
             }
         }
     }

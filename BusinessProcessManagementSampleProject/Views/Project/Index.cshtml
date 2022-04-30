@@ -1,5 +1,6 @@
-﻿@using PagedList.Core
-@using PagedList.Core.Mvc
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_layout.cshtml";
@@ -7,6 +8,13 @@
 @model BusinessProcessManagementSampleProject.Models.Project.ListProjectsViewModel
 
 <h3>Projeler</h3>
+
+<div>
+    @if (Model.ActionResponse?.ActionType != null)
+    {
+        <p class="alert-info">@Model.ActionResponse.ActionMessage</p>
+    }
+</div>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -14,6 +22,7 @@
             <th scope="col">Başlangıç Tarihi</th>
             <th scope="col">Bitiş Tarihi</th>
             <th scope="col">Durumu</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
@@ -22,17 +31,33 @@
             {
                 <tr>
                     <td>@project.Title</td>
-                    <td>@project.StartDate.ToString("dd MMM yyyy HH:mm")</td>
-                    <td> @project.EndDate.ToString("dd MMM yyyy HH:mm")</td>
-                    <th scope="col">@project.ProjectStatus</th>
+                    <td>@project.StartDate.ToString("dd MMM yyyy")</td>
+                    <td> @project.EndDate.ToString("dd MMM yyyy")</td>
+                    <th scope="col">@project.ProjectStatusString</th>
+                    <th>
+                        <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Project",new {projectId=project.Id})'" />
+
+                        <input type="submit" value="Edit" onclick="location.href='@Url.Action("CreateProject", "Project",new {projectId=project.Id})'" />
+
+                        <form id="removeBadgeForm-@project.Id" method="post" action="~/Project/Delete/@project.Id">
+                        <a href="#" onclick="removeProject(@project.Id)"><i class="delete" data-toggle="tooltip" title="Sil">iptal</i></a>
+                        </form>
+                    </th>
 
                 </tr>
             }
         }
     </tbody>
 </table>
-    <div class=" col-8">
-        <td colspan="3" align="center">
-            <pager list="@Model.Projects" asp-controller="Project" asp-action="Index" />
-        </td>
-    </div>
+<div class="float-right">
+    <pager class="pager-container" options="@PagedList.Core.Mvc.PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" list="@Model.Projects" action="@Url.Action("Index")" />
+</div>
+
+<script>
+
+    function removeProject(id) {
+        if (confirm("Tanımlı Rozet silinecek. Bu işlemi yapmak istediğinize emin misiniz?")) {
+            $('#removeBadgeForm-' + id).submit();
+        }
+    };
+</script>

@@ -12,8 +12,11 @@ namespace EntityLayer.Repositories
     public interface IProjectRepository
     {
         Project GetById(int id);
+        List<Project> GetActiveProjects(int? managerId);
 
-        Project GetByTitle(int id,string title, int managerId);
+        Project GetByTitle(string title, int managerId,int id);
+
+        int DeleteProject(int id);
 
         IPagedList<ProjectModel> GetProjectsForManager(int managerId, int pagenumber, int pageSize, string searchFilter);
 

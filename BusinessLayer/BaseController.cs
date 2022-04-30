@@ -10,13 +10,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 
-namespace VeriPark.DigitalBadge.Business
+namespace BusinessLayer.Helpers
 {
     public class BaseController : Controller
     {
         protected readonly UserManager<User> userManager;
         protected readonly SignInManager<User> signInManager;
-        public const int _pageSize = 1;
+        public const int _pageSize = 6;
         public BaseController()
         {
 
