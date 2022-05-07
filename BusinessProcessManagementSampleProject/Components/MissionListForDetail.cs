@@ -1,5 +1,4 @@
-﻿using BusinessLayer.Handler;
-using BusinessProcessManagementSampleProject.Models.Project;
+﻿using BusinessProcessManagementSampleProject.Models.Project;
 using EntityLayer.Handler;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,15 +8,14 @@ using System.Threading.Tasks;
 
 namespace BusinessProcessManagementSampleProject.Components
 {
-    public class MembersListForDetail:ViewComponent
+    public class MissionListForDetail:ViewComponent
     {
-        public  readonly IProjectHandler projectHandler;
+        public readonly IProjectHandler projectHandler;
         private int _pageSize = 6;
-        public MembersListForDetail(IProjectHandler projectHandler)
+        public MissionListForDetail(IProjectHandler projectHandler)
         {
             this.projectHandler = projectHandler;
         }
-
         public IViewComponentResult Invoke(int projectId, int? page, string currentFilter, string filter)
         {
             if (filter != null)
@@ -28,9 +26,9 @@ namespace BusinessProcessManagementSampleProject.Components
             ViewBag.CurrentFilter = filter;
             ViewBag.ProjectId = projectId;
 
-            var tuple = projectHandler.GetMembersOfProject(projectId, page ?? 1, _pageSize, filter);
+            var tuple = projectHandler.GetMissionsOfProject(projectId, page ?? 1, _pageSize, filter);
 
-            var viewModel = new ListProjectMemberViewModel { Members = tuple.Item1, ActionResponse = null, PageCount=tuple.Item2, CurrentPageIndex =Convert.ToInt32(page),ProjectId=projectId};
+            var viewModel = new ListProjectMissionsVİewModel { Missions = tuple.Item1, ActionResponse = null, PageCount = tuple.Item2, CurrentPageIndex = Convert.ToInt32(page),ProjectId=projectId };
 
             return View(viewModel);
         }

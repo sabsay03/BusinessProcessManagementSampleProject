@@ -16,12 +16,14 @@ namespace BusinessLayer.Handler
     {
         private readonly IProjectRepository projectRepository;
         private readonly IProjectMemberRepository projectMemberRepository;
+        private readonly IMissionRepository missionRepository;
 
 
-        public ProjectHandler(IProjectRepository projectRepository, IProjectMemberRepository projectMemberRepository)
+        public ProjectHandler(IProjectRepository projectRepository, IProjectMemberRepository projectMemberRepository,IMissionRepository missionRepository)
         {
             this.projectRepository = projectRepository;
             this.projectMemberRepository = projectMemberRepository;
+            this.missionRepository = missionRepository;
         }
         public Tuple<List<UserDetailedModel>,int> GetMembersOfProject(int projetId, int pagenumber, int pageSize, string searchFilter)
         {
@@ -30,6 +32,17 @@ namespace BusinessLayer.Handler
             foreach (var item in pagedlist.Item1)
             {
                 item.UserFullName = $"{item.Firstname} {item.Lastname}";
+            }
+            return pagedlist;
+        }
+
+        public Tuple<List<MissionModel>, int> GetMissionsOfProject(int projetId, int pagenumber, int pageSize, string searchFilter)
+        {
+            var pagedlist =missionRepository.GetMissionByProjectId(projetId, pagenumber, pageSize, searchFilter);
+
+            foreach (var item in pagedlist.Item1)
+            {
+                item.StudenFullName = $"{item.FirstName} {item.LastName}";
             }
             return pagedlist;
         }
@@ -129,6 +142,17 @@ namespace BusinessLayer.Handler
                 projectRepository.UpdateProject(project);
                 return new MessageResponse { Success = true, Message = "Proje Güncellenmiştir " };
             }
+        }
+
+        public IPagedList<ProjectRequestModel> GetProjectRequestsForManager(int managerId, int pageNumber, int pageSize, string searchFilter)
+        {
+            var requests = projectRepository.GetProjectRequestsForManager(managerId, pageNumber, pageSize, searchFilter);
+
+            foreach (var request in requests)
+            {
+
+            }
+            return requests;
         }
     }
 }

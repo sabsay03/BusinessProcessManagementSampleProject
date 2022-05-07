@@ -38,6 +38,7 @@ namespace DataAccessLayer.Repositories
                           }).OrderBy(pm => pm.Id).
 
                           Skip((pagenumber - 1) * pageSize).Take(pageSize).ToList() ;
+
                 var allList = databaseContext.ProjectMembers.Include(pm => pm.Member).Include(pm => pm.Project).Where(pm => pm.ProjecId == projectId
                        && pm.ProjectMemberStatus == EntityLayer.Enums.ProjectMemberStatus.active).ToList();
 

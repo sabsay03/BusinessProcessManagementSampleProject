@@ -13,11 +13,54 @@ namespace DataAccessLayer.Repositories
 {
     public class MissionRepository : IMissionRepository
     {
+        public int DeleteMission(int id)
+        {
+            using (Context databaseContext = new Context())
+            {
+                var mission = GetById(id);
+                databaseContext.Tasks.Attach(mission);
+                mission.MissionStatus = EntityLayer.Enums.MissionStatus.Cancel;
+                databaseContext.SaveChanges();
+                return id;
+
+            }
+        }
+
         public Mission GetById(int id)
         {
             using (Context databaseContext = new Context())
             {
                 return databaseContext.Tasks.Include(p=>p.Member).Include(p=>p.Project).Where(p => p.Id == id).FirstOrDefault();
+            }
+        }
+
+        public Tuple<List<MissionModel>, int> GetMissionByProjectId(int projectId, int pagenumber, int pageSize, string searchFilter)
+        {
+            using (Context databaseContext = new Context())
+            {
+
+                var query = databaseContext.Tasks.Include(t => t.Member).Include(t => t.Project).Where(t => t.ProjectId == projectId).
+                    Select(t => new MissionModel
+                    {
+                        Id = t.Id,
+                        StudentId = Convert.ToInt32(t.MemberId),
+                        Title = t.Title,
+                        Description = t.Description,
+                        StartDate = t.StartDate,
+                        EndDate = t.EndDate,
+                        StudentNumber = t.Member.StudentNumber,
+                        ProjectId = t.ProjectId,
+                        LastName=t.Member.LastName,
+                        FirstName=t.Member.FirstName
+                    }).OrderBy(t => t.Id)
+                    .Skip((pagenumber - 1) * pageSize).Take(pageSize).ToList();
+
+                var allList = databaseContext.Tasks.Include(pm => pm.Member).Include(pm => pm.Project).Where(pm => pm.ProjectId == projectId).ToList();
+
+                double pageCount = (double)((decimal)allList.Count() / Convert.ToDecimal(pageSize));
+                int PageCount = (int)Math.Ceiling(pageCount);
+
+                return new Tuple<List<MissionModel>, int>(query, PageCount);
             }
         }
 

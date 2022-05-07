@@ -44,16 +44,20 @@ namespace BusinessProcessManagementSampleProject.Controllers
             return View(model);
         }
 
-        public IActionResult GetMyViewComponent(int projectId,int page)
+        public IActionResult GetMembersListForDetail(int projectId,int page)
         {
-            return ViewComponent("MembersListForDetail",new {projectId=projectId,page=page,pagesize=1});
+            return ViewComponent("MembersListForDetail",new {projectId=projectId,page=page,pagesize=_pageSize});
+        }
+        public IActionResult GetMissionsListForDetail(int projectId, int page)
+        {
+            return ViewComponent("MissionListForDetail", new { projectId = projectId, page = page, pagesize = _pageSize });
         }
 
         public ActionResult Index(int? page, string currentFilter, string name)
         {
             var currentState = GetCurrentActionState();
             ViewBag.name = name;
-            var badgeList = projectHandler.GetProjectsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
+            var projects = projectHandler.GetProjectsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
 
             if (name != null)
                 page = 1;
@@ -62,7 +66,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
             ViewBag.CurrentFilter = name;
 
-            var viewModel = new ListProjectsViewModel { Projects = badgeList,ActionResponse=currentState };
+            var viewModel = new ListProjectsViewModel { Projects = projects, ActionResponse=currentState };
 
             return View(viewModel);
         }
@@ -72,7 +76,6 @@ namespace BusinessProcessManagementSampleProject.Controllers
         {
             var project=projectHandler.GetProjectDetailById(projectId);
 
-            var users = projectHandler.GetMembersOfProject(projectId, 1, _pageSize,null);
             var viewModel = new ProjectDetailViewModel { Project = project};
 
             return View(viewModel);
@@ -155,6 +158,25 @@ namespace BusinessProcessManagementSampleProject.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        public ActionResult GetProjectRequests(int? page, string currentFilter, string name)
+        {
+            ViewBag.name = name;
+            var projects = projectHandler.GetProjectsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
+
+            if (name != null)
+                page = 1;
+            else
+                name = currentFilter;
+
+            ViewBag.CurrentFilter = name;
+
+            var viewModel = new ListProjectsViewModel { Projects = projects };
+
+            return View(viewModel);
+        }
+
 
         private void SetCurrentActionState(ActionType actionType, string actionResult)
         {

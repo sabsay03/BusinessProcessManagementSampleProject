@@ -1,9 +1,10 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PagedList.Core.Mvc
 
-@model BusinessProcessManagementSampleProject.Models.Project.ListProjectMemberViewModel
+@model BusinessProcessManagementSampleProject.Models.Project.ListProjectMissionsVİewModel
+
 <link href="~/css/site.css" rel="stylesheet" />
-@if ((Model.Members?.Count() ?? 0) <= 0)
+@if ((Model.Missions?.Count() ?? 0) <= 0)
 {
     <ul>
         <li>Aradığınız kriterlere göre kullanıcı bulunmamaktadır.</li>
@@ -26,11 +27,11 @@
         </thead>
         <tbody>
             @{
-                foreach (var member in Model.Members)
+                foreach (var member in Model.Missions)
                 {
                     <tr>
-                        <td>@member.UserFullName</td>
-                        <td>@member.StudentNo</td>
+                        <td>@member.StudenFullName</td>
+                        <td>@member.StudentNumber</td>
                         <th>
                             <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Project", new { member.Id })'" />
 
@@ -52,7 +53,7 @@
             <li>
                 @if (i != Model.CurrentPageIndex)
                 {
-                    <a href="javascript:PagerClick(@Model.ProjectId,@i);">@i</a>
+                    <a href="javascript:PagerClick1(@Model.ProjectId,@i);">@i</a>
                 }
                 else
                 {
@@ -62,7 +63,7 @@
         }
     </ul>
 
-    <button type="submit" class="btn btn-success w-100" onclick="location.href='@Url.Action("CreateProjectMember","Project")'"><h3>Yeni Öğrenci Ekle</h3></button>
+    <button type="submit" class="btn btn-success w-100" onclick="location.href='@Url.Action("CreateMission","Mission")'"><h3>Yeni Görev Ekle</h3></button>
 </div>
 <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">

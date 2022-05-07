@@ -14,7 +14,10 @@ namespace EntityLayer.Repositories
 
         Mission GetMissionForCheck(int memberId,string title,int projectId,int id);
 
+        Tuple<List<MissionModel>, int> GetMissionByProjectId(int projectId, int pagenumber, int pageSize, string searchFilter);
         int SaveMission(MissionModel missionModel);
         int UpdateMission(MissionModel missionModel);
+
+        int DeleteMission(int id);
     }
 }

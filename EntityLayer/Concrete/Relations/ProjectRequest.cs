@@ -13,6 +13,8 @@ namespace EntityLayer.Concrete.Relations
         public int UserId { get; set; }
         public int ProjectId { get; set; }
         public int ManagerId { get; set; }
+
+        public ProjectRequestStatus ProjectRequestStatus { get; set; }
         public DateTime CreateDate { get; set; }
         public virtual User User { get; set; }
         public virtual User Manager { get; set; }

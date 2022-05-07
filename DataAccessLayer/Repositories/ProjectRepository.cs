@@ -126,5 +126,33 @@ namespace DataAccessLayer.Repositories
                 return databaseContext.Projects.Where(p => p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Active && p.ManagerId == managerId).OrderBy(p => p.Id).ToList();
             }
         }
+
+        public IPagedList<ProjectModel> GetProjectRequestsForManager(int managerId, int pagenumber, int pageSize, string searchFilter)
+        {
+            using (Context databaseContext = new Context())
+            {
+                var query = databaseContext.ProjectRequests.Include(p=> p.Project).Include(p=>p.Manager).Include(p=>p.User).Where(p => p.ManagerId == managerId && p.ProjectRequestStatus==EntityLayer.Enums.ProjectRequestStatus.Waiting).
+                 Select(p => new ProjectRequestModel
+                 {
+                     Id = Convert.ToInt32(p.Id),
+                     ProjecId=p.ProjectId,
+                     MemberId=p.UserId,
+                     ManagerId=p.ManagerId,
+                     ProjectTitle=p.Project.Title,
+                     StudentNo=p.User.StudentNumber,
+                     FullName= item.StudenFullName = $"{item.FirstName} {item.LastName}";
+
+
+            });
+
+
+                if (!String.IsNullOrEmpty(searchFilter))
+                    query = query.Where(p =>
+                        p.Title.ToLower().Contains(searchFilter.ToLower())
+                        );
+
+                return query.OrderBy(p => p.Id).ToPagedList(pagenumber, pageSize);
+            }
+        }
     }
 }

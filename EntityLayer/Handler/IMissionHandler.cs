@@ -14,5 +14,6 @@ namespace EntityLayer.Handler
 
         MessageResponse UpdateMission(MissionModel missionModel);
         MessageResponse CreateMission(MissionModel missionModel);
+        int DeleteMission(int id);
     }
 }

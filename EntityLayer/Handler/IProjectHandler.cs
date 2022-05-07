@@ -22,6 +22,10 @@ namespace EntityLayer.Handler
 
         Tuple<List<UserDetailedModel>,int>GetMembersOfProject(int projetId, int pagenumber, int pageSize, string searchFilter);
 
+        Tuple<List<MissionModel>, int> GetMissionsOfProject(int projetId, int pagenumber, int pageSize, string searchFilter);
+
         IPagedList<ProjectModel> GetProjectsForManager(int managerId, int pageNumber, int pageSize, string searchFilter);
+
+        IPagedList<ProjectRequestModel> GetProjectRequestsForManager(int managerId, int pageNumber, int pageSize, string searchFilter);
     }
 }

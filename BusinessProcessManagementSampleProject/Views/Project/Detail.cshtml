@@ -38,7 +38,7 @@
             @await Component.InvokeAsync("MembersListForDetail", new { projectId = Model.Project.Id })
         </div>
         <div class="row" data-id="tab2" id="tab2div">
-            tab2
+            @await Component.InvokeAsync("MissionListForDetail", new { projectId = Model.Project.Id })
         </div>
         <div class="row" data-id="tab3" id="tab3div">
             tab 3
@@ -60,7 +60,25 @@
         e.preventDefault();
     })
 
-        function PagerClick(index) {
+        function PagerClick(projectId,index) {
+        $.ajax({
+        type: "POST",
+        url: '@Url.Action("GetMembersListForDetail", "Project")',
+            data: { projectId: projectId, page: index },
+    }).done(function (data) {
+        $('#tab1div').html(data);
+    });
+    }
+            function PagerClick1(projectId,index) {
+        $.ajax({
+        type: "POST",
+        url: '@Url.Action("GetMissionsListForDetail", "Project")',
+            data: { projectId: projectId, page: index },
+    }).done(function (data) {
+        $('#tab2div').html(data);
+    });
+    }
+            function PagerClick2(index) {
         $.ajax({
         type: "POST",
         url: '@Url.Action("GetMyViewComponent", "Project")',
@@ -69,5 +87,7 @@
         $('#tab1div').html(data);
     });
     }
+
+
 
 </script>

@@ -54,7 +54,9 @@ namespace BusinessLayer.Handler
             return missionRepository.GetById(id);
         }
 
-    
-
+        public int DeleteMission(int id)
+        {
+          return  missionRepository.DeleteMission(id);
+        }
     }
 }

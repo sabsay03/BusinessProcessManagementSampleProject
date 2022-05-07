@@ -99,18 +99,20 @@ namespace BusinessProcessManagementSampleProject.Controllers
                 }
             }
             ViewBag.ProjectSelectListItems = dropDownHelper.ProjectSelectListByManager(GetCurrentId());
-            ModelState.AddModelError("", "Öğrenci Ekleme Başarısız.");
+            ModelState.AddModelError("", "Görev Ekleme Başarısız.");
             return View(model);
         }
 
         // POST: MissionController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id,int projectId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                missionHandler.DeleteMission(id);
+
+                return RedirectToAction("Project","Detail",new {projectId=projectId });
             }
             catch
             {

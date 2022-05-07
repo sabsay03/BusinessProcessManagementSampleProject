@@ -12,6 +12,8 @@ namespace EntityLayer.Models
         public int StudentId { get; set; }
         public string StudentNumber { get; set; }
         public string StudenFullName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Title { get; set; }
