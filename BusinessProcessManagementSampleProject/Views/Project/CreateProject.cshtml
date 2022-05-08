@@ -50,6 +50,10 @@
             <input type="date" class="form-control" asp-for=EndDate id="inputTitle" requried>
             <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
         </div>
+        <div class="form-group">
+            <label for="inputUserName" class="font-weight-bold">Dosya Yolu</label>
+            <input type="date" class="form-control" asp-for=FilePath id="inputTitle" requried>
+        </div>
 
 
         <button type="submit" class="btn btn-success w-100"><h3>Oluştur</h3></button>

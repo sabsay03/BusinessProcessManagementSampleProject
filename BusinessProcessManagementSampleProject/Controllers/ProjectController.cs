@@ -92,7 +92,8 @@ namespace BusinessProcessManagementSampleProject.Controllers
                     Title = model.Title,
                     Description = model.Description,
                     StartDate = model.StartDate,
-                    EndDate = model.EndDate
+                    EndDate = model.EndDate,
+                    FilePath=model.FilePath
                 });
 
             }
@@ -113,7 +114,8 @@ namespace BusinessProcessManagementSampleProject.Controllers
                         Title = model.Title,
                         StartDate = model.StartDate,
                         EndDate = model.EndDate,
-                        ManagerId = GetCurrentId(),   
+                        ManagerId = GetCurrentId(),
+                        FilePath=model.FilePath
                     };
                    var response= projectHandler.UpdateProject(project);
                    TempData["messageCreateOrEdit"] = response.Message;
@@ -129,6 +131,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
                         StartDate = model.StartDate,
                         EndDate = model.EndDate,
                         ManagerId = GetCurrentId(),
+                        FilePath = model.FilePath
                     };
                     var response = projectHandler.CreateProject(project);
                     TempData["messageCreateOrEdit"] = response.Message;
@@ -163,7 +166,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
         public ActionResult GetProjectRequests(int? page, string currentFilter, string name)
         {
             ViewBag.name = name;
-            var projects = projectHandler.GetProjectsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
+            var projectRequestModels = projectHandler.GetProjectRequestsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
 
             if (name != null)
                 page = 1;
@@ -172,7 +175,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
             ViewBag.CurrentFilter = name;
 
-            var viewModel = new ListProjectsViewModel { Projects = projects };
+            var viewModel = new ListProjectRequestViewModel { ProjectRequest = projectRequestModels };
 
             return View(viewModel);
         }

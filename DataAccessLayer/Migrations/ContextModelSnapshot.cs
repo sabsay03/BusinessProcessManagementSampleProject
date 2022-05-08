@@ -103,6 +103,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ManagerId")
                         .HasColumnType("int");
 
@@ -158,6 +161,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectRequestStatus")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")

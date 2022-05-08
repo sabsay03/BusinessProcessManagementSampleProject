@@ -12,5 +12,6 @@ namespace EntityLayer.Repositories
     public interface IUserRepository
     {
         User GetUserByStudentNo(string studentNo);
+
     }
 }

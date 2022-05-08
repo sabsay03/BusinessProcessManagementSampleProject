@@ -16,6 +16,7 @@ namespace EntityLayer.Models
         public int ManagerId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string FilePath { get; set; }
         public ProjectStatus ProjectStatus { get; set; }
 
         public string ProjectStatusString { get; set; }

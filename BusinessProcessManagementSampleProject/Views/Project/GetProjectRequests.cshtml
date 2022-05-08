@@ -1,0 +1,52 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
+
+@model BusinessProcessManagementSampleProject.Models.Project.ListProjectRequestViewModel
+@{
+    ViewData["Title"] = "GetProjectRequests";
+}
+
+<h3>Proje Talepleri</h3>
+
+<div>
+    @if (Model.ActionResponse?.ActionType != null)
+    {
+        <p class="alert-info">@Model.ActionResponse.ActionMessage</p>
+    }
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Öğrenci İsmi</th>
+            <th scope="col">Öğrenci No</th>
+            <th scope="col">Proje İsmi</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var project in Model.ProjectRequest)
+            {
+                <tr>
+                    <td>@project.FullName</td>
+                    <td>@project.StudentNo</td>
+                    <td>@project.ProjectTitle</td>
+                    <td>@project.ProjectRequestStatus</td>
+                    <th>
+                        <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Project",new {projectId=project.Id})'" />
+
+                        <input type="submit" value="Edit" onclick="location.href='@Url.Action("CreateProject", "Project",new {projectId=project.Id})'" />
+
+                        <form id="removeBadgeForm-@project.Id" method="post" action="~/Project/Delete/@project.Id">
+                            <a href="#" onclick="removeProject(@project.Id)"><i class="delete" data-toggle="tooltip" title="Sil">iptal</i></a>
+                        </form>
+                    </th>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="float-right">
+    <pager class="pager-container" options="@PagedList.Core.Mvc.PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" list="@Model.ProjectRequest" action="@Url.Action("GetProjectRequests")" />
+</div>

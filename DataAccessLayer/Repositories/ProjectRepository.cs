@@ -127,7 +127,7 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public IPagedList<ProjectModel> GetProjectRequestsForManager(int managerId, int pagenumber, int pageSize, string searchFilter)
+        public IPagedList<ProjectRequestModel> GetProjectRequestsForManager(int managerId, int pagenumber, int pageSize, string searchFilter)
         {
             using (Context databaseContext = new Context())
             {
@@ -140,16 +140,9 @@ namespace DataAccessLayer.Repositories
                      ManagerId=p.ManagerId,
                      ProjectTitle=p.Project.Title,
                      StudentNo=p.User.StudentNumber,
-                     FullName= item.StudenFullName = $"{item.FirstName} {item.LastName}";
-
-
+                     FullName= $"{p.User.FirstName} {p.User.LastName}"
             });
 
-
-                if (!String.IsNullOrEmpty(searchFilter))
-                    query = query.Where(p =>
-                        p.Title.ToLower().Contains(searchFilter.ToLower())
-                        );
 
                 return query.OrderBy(p => p.Id).ToPagedList(pagenumber, pageSize);
             }

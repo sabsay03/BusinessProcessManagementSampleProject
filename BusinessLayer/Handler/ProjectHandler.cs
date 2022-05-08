@@ -102,9 +102,8 @@ namespace BusinessLayer.Handler
                 CreateDate = DateTime.Now,
                 ManagerId = project.ManagerId,
                 ProjectStatusString = getProjectStatusString(project.ProjectStatus),
-                Manager=project.Manager
-
-
+                Manager=project.Manager,
+                FilePath=project.FilePath
             };
         }
 
@@ -148,10 +147,6 @@ namespace BusinessLayer.Handler
         {
             var requests = projectRepository.GetProjectRequestsForManager(managerId, pageNumber, pageSize, searchFilter);
 
-            foreach (var request in requests)
-            {
-
-            }
             return requests;
         }
     }

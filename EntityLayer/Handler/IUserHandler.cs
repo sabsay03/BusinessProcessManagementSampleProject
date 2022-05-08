@@ -10,5 +10,7 @@ namespace EntityLayer.Handler
 {
     public interface IUserHandler
     {
-        UserDetailedModel GetUserByStudenNo(string studentNumber);    }
+        UserDetailedModel GetUserByStudenNo(string studentNumber);
+
+    }
 }

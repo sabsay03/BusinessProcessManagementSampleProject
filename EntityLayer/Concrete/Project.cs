@@ -23,6 +23,8 @@ namespace EntityLayer.Concrete
         public ProjectStatus ProjectStatus { get; set; } 
         public DateTime CreateDate { get; set; }
 
+        public string FilePath { get; set; }
+
         public ICollection<ProjectMember> ProjectMembers { get; set; }
 
         public IList<Mission> Tasks { get; set; }

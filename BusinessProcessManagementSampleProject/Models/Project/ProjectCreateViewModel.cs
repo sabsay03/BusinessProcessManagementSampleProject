@@ -24,5 +24,8 @@ namespace BusinessProcessManagementSampleProject.Models.Project
         [Required(ErrorMessage = "Bitiş Tarihi boş bırakılamaz.")]
         [Display(Name = "Bitiş Tarihi")]
         public DateTime EndDate { get; set; }
+
+        [Display(Name = "Dosya Linki")]
+        public string FilePath { get; set; }
     }
 }

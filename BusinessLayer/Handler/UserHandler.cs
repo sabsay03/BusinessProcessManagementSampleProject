@@ -19,8 +19,6 @@ namespace BusinessLayer.Handler
             this.userRepository = userRepository;
         }
 
-      
-
         public UserDetailedModel GetUserByStudenNo(string studentNumber)
         {
             var user = userRepository.GetUserByStudentNo(studentNumber);
@@ -41,5 +39,6 @@ namespace BusinessLayer.Handler
             };
             return userModel;            
         }
+
     }
 }

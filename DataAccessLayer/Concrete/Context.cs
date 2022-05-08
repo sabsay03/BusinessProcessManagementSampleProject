@@ -14,7 +14,7 @@ namespace DataAccessLayer.Concrete
     {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlServer("Server=LAPTOP-DACKTG5J\\SQLEXPRESS;database=BpmDb;integrated security=true");
+            optionsBuilder.UseSqlServer("Server=SABRI-PC\\SQLEXPRESS;database=BpmDb;integrated security=true");
         }
 
         public DbSet<Comment> Comments { get; set; }
