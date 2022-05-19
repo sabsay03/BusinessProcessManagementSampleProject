@@ -1,6 +1,7 @@
 ﻿
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,16 +17,17 @@ namespace BusinessLayer.Helpers
     {
         protected readonly UserManager<User> userManager;
         protected readonly SignInManager<User> signInManager;
-        public const int _pageSize = 6;
-        public BaseController()
-        {
 
+
+        public const int _pageSize = 6;
+        public BaseController( )
+        {
+            
         }
 
         public  int GetCurrentId()
         {
             var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             return Convert.ToInt32(id);
         }
         protected ActionResult RedirectToLocal(string returnUrl)

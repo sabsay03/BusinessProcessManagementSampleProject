@@ -11,6 +11,7 @@ namespace EntityLayer.Handler
     public interface IUserHandler
     {
         UserDetailedModel GetUserByStudenNo(string studentNumber);
+        UserDetailedModel GetUserById(int userId);
 
     }
 }

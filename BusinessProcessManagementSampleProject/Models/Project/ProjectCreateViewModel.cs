@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessProcessManagementSampleProject.Models.Project
 {
-    public class ProjectCreateViewModel
+    public class ProjectCreateViewModel:IValidatableObject
     {
         public int? Id { get; set; }
 
@@ -27,5 +27,16 @@ namespace BusinessProcessManagementSampleProject.Models.Project
 
         [Display(Name = "Dosya Linki")]
         public string FilePath { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (EndDate < StartDate)
+            {
+                yield return new ValidationResult(
+                    errorMessage: "Bitiş Tarihi başlangıç tarihinden önce olamaz.",
+                    memberNames: new[] { "EndDate" }
+               );
+            }
+        }
     }
 }

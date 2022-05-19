@@ -19,9 +19,7 @@ namespace DataAccessLayer.Repositories
             int userid = Convert.ToInt32(id);
             using (Context databaseContext = new Context())
             {
-                return databaseContext.Projects.Include(p=>p.ProjectMembers).Include(p=>p.Manager).Where(p => p.Id == userid).FirstOrDefault();
-            
-
+                return databaseContext.Projects.Include(p=>p.ProjectMembers).Include(p=>p.Tasks).Include(p=>p.Manager).Where(p => p.Id == userid).FirstOrDefault();
             }
         }
 
@@ -112,6 +110,11 @@ namespace DataAccessLayer.Repositories
             {
                 var project = GetById(id);
                 databaseContext.Projects.Attach(project);
+                foreach (var item in project.Tasks)
+                {
+                    databaseContext.Tasks.Attach(item);
+                    item.MissionStatus = EntityLayer.Enums.MissionStatus.Cancel;
+                }
                 project.ProjectStatus = EntityLayer.Enums.ProjectStatus.Cancel;
                 databaseContext.SaveChanges();
                 return id;
@@ -145,6 +148,28 @@ namespace DataAccessLayer.Repositories
 
 
                 return query.OrderBy(p => p.Id).ToPagedList(pagenumber, pageSize);
+            }
+        }
+
+        public int UpdateProjectForComplete(int projectId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                var Entitiy = GetById(projectId);
+
+                databaseContext.Projects.Attach(Entitiy);
+
+                Entitiy.ProjectStatus = EntityLayer.Enums.ProjectStatus.Done;
+
+                foreach (var item in Entitiy.Tasks)
+                {
+                    databaseContext.Tasks.Attach(item);
+                    item.MissionStatus = EntityLayer.Enums.MissionStatus.Done;
+                }
+
+                databaseContext.SaveChanges();
+
+                return projectId;
             }
         }
     }

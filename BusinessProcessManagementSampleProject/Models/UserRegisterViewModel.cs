@@ -8,10 +8,6 @@ namespace BusinessProcessManagementSampleProject.Models
 {
     public class UserRegisterViewModel
     {
-        [Display(Name = "Okul No Giriniz")]
-        [Required(ErrorMessage = "Lütfen Okul Numaranızı Giriniz")]
-        public string StudentNumber { get; set; }
-
         [Display(Name="Ad Giriniz")]
         [Required(ErrorMessage ="Lütfen Adınızı Giriniz")]
         public string FirstName { get; set; }

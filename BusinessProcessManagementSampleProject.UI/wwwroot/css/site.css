@@ -27,14 +27,13 @@ a {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+  font-size: 20px;
 }
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
-
 .border-top {
   border-top: 1px solid #e5e5e5;
 }
@@ -68,4 +67,50 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+.rosetteAreaLeft {
+    padding-left: 30px;
+}
+.rosetteAreaRight {
+    padding-top:10px;
+    padding-right: 0px;
+    padding-bottom: 45px;
+}
+.rosetteLinkList {
+    padding-top: 15px;
+    position: sticky;
+    top: 170px;
+    margin: 0 0 20px 0;
+}
+    .rosetteLinkList div {
+float:left;
+    }
+
+    .rosetteLinkList a {
+        display: block;
+        background-color: lightgray;
+        color: #21285D;
+        font-size: 17px;
+        line-height: 22px;
+        padding: 15px 20px 15px 50px;
+        text-decoration: none;
+    }
+
+        .rosetteLinkList a:hover {
+            background-color: #4CAF50;
+        }
+        .rosetteLinkList a.active {
+            background-color: #4CAF50;
+        }
+
+    .rosetteLinkList li {
+        list-style-type: none;
+        width: 300px;
+        margin-bottom: 14px;
+    }
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
 }

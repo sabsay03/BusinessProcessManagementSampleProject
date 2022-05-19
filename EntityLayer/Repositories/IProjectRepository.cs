@@ -23,6 +23,8 @@ namespace EntityLayer.Repositories
         IPagedList<ProjectRequestModel> GetProjectRequestsForManager(int managerId, int pagenumber, int pageSize, string searchFilter);
 
         int UpdateProject(ProjectModel project);
+        int UpdateProjectForComplete(int projectId);
+
 
         int SaveProject(ProjectModel project);
 

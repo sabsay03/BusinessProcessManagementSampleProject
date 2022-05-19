@@ -19,6 +19,28 @@ namespace BusinessLayer.Handler
             this.userRepository = userRepository;
         }
 
+        public UserDetailedModel GetUserById(int userId)
+        {
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+            var userModel = new UserDetailedModel
+            {
+                Id = user.Id,
+                Firstname = user.FirstName,
+                Lastname = user.LastName,
+                UserFullName = $"{user.FirstName} {user.LastName}",
+                Email = user.Email,
+                StudentNo = user.StudentNumber,
+                ProjectMembers=user.ProjectMembers,
+                Tasks=user.Tasks
+            };
+            return userModel;
+        }
+
         public UserDetailedModel GetUserByStudenNo(string studentNumber)
         {
             var user = userRepository.GetUserByStudentNo(studentNumber);

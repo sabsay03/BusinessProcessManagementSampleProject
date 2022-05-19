@@ -63,6 +63,12 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FeedBack")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("MemberId")
                         .HasColumnType("int");
 

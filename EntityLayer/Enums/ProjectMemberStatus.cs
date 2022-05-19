@@ -8,7 +8,7 @@ namespace EntityLayer.Enums
 {
     public enum ProjectMemberStatus
     {
-        active,
-        passive
+        active=0,
+        passive=1
     }
 }

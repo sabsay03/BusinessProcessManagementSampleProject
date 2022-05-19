@@ -1,0 +1,70 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
+
+@model WebUI.Views.Project.List.ListProjectMissionsVİewModel
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+@if ((Model.Missions?.Count() ?? 0) <= 0)
+{
+    <ul>
+        <li>Aradığınız kriterlere göre kullanıcı bulunmamaktadır.</li>
+    </ul>
+}
+<div>
+    @if (Model.ActionResponse?.ActionType != null)
+    {
+        <p class="alert-info">@Model.ActionResponse.ActionMessage</p>
+    }
+</div>
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Adı Soyadı</th>
+                <th scope="col">Öğrenci No</th>
+                <th scope="col">Status</th>
+                <th scope="col">Görev İsmi</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var mission in Model.Missions)
+                {
+                    <tr>
+                        <td>@mission.StudenFullName</td>
+                        <td>@mission.StudentNumber</td>
+                        <td>@mission.MissionStatusString</td>
+                        <td>@mission.Title</td>
+
+                        <td>
+                            <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Mission", new { missionId=mission.Id })'" />
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+        @Model.CurrentPageIndex. Sayfadasınız
+    </table>
+
+    <ul class="pagination float-right">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <li>
+                @if (i != Model.CurrentPageIndex)
+                {
+                    <a href="javascript:PagerClick1(@Model.ProjectId,@i);">@i</a>
+                }
+                else
+                {
+                    <a class="active"><span>@i</span></a>
+                }
+            </li>
+        }
+    </ul>
+
+</div>
+<input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">

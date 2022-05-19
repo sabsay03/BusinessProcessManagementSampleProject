@@ -18,7 +18,7 @@ namespace DataAccessLayer.Repositories
         {
             using (Context databaseContext = new Context())
             {
-                return databaseContext.ProjectMembers.Where(pm => pm.MemberId == memberId && pm.ProjecId == projectId).FirstOrDefault();
+                return databaseContext.ProjectMembers.Include(pm=> pm.Project).Include(pm=> pm.Member).Where(pm => pm.MemberId == memberId && pm.ProjecId == projectId).FirstOrDefault();
             }
         }
         public Tuple<List<UserDetailedModel>, int> GetMembers(int projectId, int pagenumber, int pageSize, string searchFilter)
@@ -64,6 +64,35 @@ namespace DataAccessLayer.Repositories
                 databaseContext.ProjectMembers.Add(member);
                 databaseContext.SaveChanges();
                 return member.Id;
+            }
+        }
+
+        public IPagedList<ProjectModel> GetProjectsForMember(int memberId, int pagenumber, int pageSize, string searchFilter)
+        {
+            using (Context databaseContext = new Context())
+            {
+
+                var query = databaseContext.ProjectMembers.Include(pm => pm.Member).Include(pm => pm.Project).Where(pm => pm.MemberId == memberId
+                    && pm.ProjectMemberStatus == EntityLayer.Enums.ProjectMemberStatus.active).
+                        Select(p => new ProjectModel
+                        {
+                            Id = p.Project.Id,
+                            Description = p.Project.Description,
+                            Title = p.Project.Title,
+                            StartDate = p.Project.StartDate,
+                            EndDate = p.Project.EndDate,
+                            ManagerId = p.Project.ManagerId,
+                            ProjectStatus = p.Project.ProjectStatus
+                        });
+
+
+                //if (!String.IsNullOrEmpty(searchFilter))
+                //    query = query.Where(p =>
+                //        p..ToLower().Contains(searchFilter.ToLower())
+                //        );
+
+                return query.OrderBy(p => p.Id).ToPagedList(pagenumber, pageSize);
+
             }
         }
     }

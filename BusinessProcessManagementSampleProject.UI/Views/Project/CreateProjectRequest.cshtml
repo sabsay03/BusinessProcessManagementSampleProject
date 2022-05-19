@@ -1,0 +1,100 @@
+﻿@model BusinessProcessManagementSampleProject.UI.Models.Project.ProjectRequestCreateViewModel
+
+@{
+    ViewData["Title"] = "CreateProjectRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-12">
+    <div class="rosettaGuideTxt">
+        @if (TempData["successCreateOrEdit"] != null)
+        {
+            if ((bool)TempData["successCreateOrEdit"] == true)
+            {
+                <p class="alert alert-success">@TempData["messageCreateOrEdit"]</p>
+            }
+            else
+            {
+                <p class="alert alert-danger">@TempData["messageCreateOrEdit"]</p>
+            }
+
+        }
+    </div>
+</div>
+<div class="bg-white w-100 shadow p-3">
+    <h3 class="text-center">Talep Gönder</h3>
+    <form asp-controller="Project" asp-action="CreateProjectRequest" method="POST">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="ManagerId" class="control-label"></label>
+            <select id="managerSelectList" asp-for="ManagerId" asp-items="ViewBag.TeacherSelectList" class="form-control"></select>
+            <span asp-validation-for="ManagerId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProjecId" class="control-label"></label>
+            <select id="projectSelectList" asp-for="ProjecId" asp-items="ViewBag.ProjectSelectList" class="form-control"></select>
+            <span asp-validation-for="ProjecId" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success w-100"><h3>Talep Gönder</h3></button>
+    </form>
+</div>
+<script>
+
+    var result;
+    var routeUrl = {
+        GetProjectDropdownValues: '@Url.Action("GetProjectsDropdownValues", "Project")'
+    }
+</script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+
+        $('#managerSelectList').on("change", function () {
+
+            var id = $('#managerSelectList').val()
+
+            var request = {
+                id:$('#managerSelectList').val()
+            };
+
+            if ($('#managerSelectList').val() != "") {
+                $('#projectSelectList').removeAttr("disabled");
+
+                $.ajax({
+                    type: "POST",
+                    url: routeUrl.GetProjectDropdownValues,
+                    data: request,
+                    success: successFunc,
+                    error: errorFunc
+                });
+                function successFunc(data, status) {
+                    console.log(data.length);
+                    result = data;
+                    console.log("result: " + result);
+
+                    for (var i = 0; $('#projectSelectList')[0].length = 0; i++) {
+                        $('#projectSelectList')[0].remove(0);
+                    }
+
+                    for (var j = 0; j < data.length; j++) {
+                        var opt = document.createElement("option");
+                        opt.text = data[j].text;
+                        opt.value = data[j].value;
+                        $('#projectSelectList')[0].add(opt, j);
+                    }
+
+                }
+                function errorFunc(err) {
+                    console.log(err);
+                }
+
+            }
+            else {
+                $('#projectSelectList').val("");
+                $('#projectSelectList').attr("disabled", "disabled");
+            }
+        });
+    })
+</script>
+

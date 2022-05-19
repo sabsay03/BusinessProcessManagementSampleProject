@@ -1,0 +1,154 @@
+﻿
+@model WebUI.Models.Mission.MissionDetailViewModel
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="bg-white w-100 shadow p-3">
+    <div class="col-12">
+        <div class="rosettaGuideTxt">
+            @if (TempData["successCreateOrEdit"] != null)
+            {
+                if ((bool)TempData["successCreateOrEdit"] == true)
+                {
+                    <p class="alert alert-success">@TempData["messageCreateOrEdit"]</p>
+                }
+                else
+                {
+                    <p class="alert alert-danger">@TempData["messageCreateOrEdit"]</p>
+                }
+
+            }
+        </div>
+    </div>
+    <h3 class="text-center">@Model.Mission.Title</h3>
+    <div class="form-group">
+        <label type="text" class="form-control" id="inputTitle" hidden>@Model.Mission.Id</label>
+        @Html.HiddenFor(m => m.Mission.Id, new { id = "missionId" })
+    </div>
+    <div class="form-group">
+        <label for="inputUserName" class="font-weight-bold">Açıklama</label>
+        <label style="height:100px;" type="textArea" class="form-control" id="inputTitle">@Model.Mission.Description</label>
+
+        <label for="inputUserName" class="font-weight-bold">Başlangıç Tarihi</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.StartDate.ToString("dd MMMM yyyy")</label>
+
+        <label for="inputUserName" class="font-weight-bold">Bitiş Tarihi</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.EndDate.ToString("dd MMMM yyyy")</label>
+
+        <label for="inputUserName" class="font-weight-bold">Durumu</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.MissionStatusString</label>
+
+        <label for="inputUserName" class="font-weight-bold">Proje Hocası</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.Manager.FirstName @Model.Mission.Manager.LastName</label>
+
+        <label for="inputUserName" class="font-weight-bold">Okul No</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.StudentNumber</label>
+
+        @if (Model.Mission.FilePath != null)
+        {
+            <label for="inputUserName" class="font-weight-bold">Gönderilen Dosya yolu</label>
+            <label type="text" class="form-control" id="inputTitle">@Model.Mission.FilePath</label>
+        }
+    </div>
+    @if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Process)
+    {
+        <div class="row">
+            <div class="col-md-12 rosetteLinkList">
+                <div data-tab-id="tab1" class="col-md-12" style="text-align:center"><a class="font-weight-bold">Görevi Gönder</a></div>
+                <div data-tab-id="tab2" class="col-md-12" style="text-align:center"><a class="font-weight-bold">Geri Dönüş</a></div>
+            </div>
+        </div>
+    }
+    else if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Done)
+    { <div class="row">
+
+            <div data-tab-id="tab2" class="col-md-12" style="text-align:center"><a class="font-weight-bold">Geri Dönüş</a></div>
+        </div>
+    }
+    else
+    {
+
+    }
+    <div>
+        <div class="row" data-id="tab1" id="tab1div">
+            <form asp-controller="Mission" asp-action="SendMission" method="POST">
+                <div class="form-group">
+                    <label for="inputUserName" class="font-weight-bold">Dosya Yolu</label>
+                    <input type="text" class="form-control" id="filePath" requried>
+                </div>
+                <button type="button" onclick="send()" class="btn btn-success w-100"><h3>Gönder</h3></button>
+            </form>
+        </div>
+        <div class="row" data-id="tab2" id="tab2div">
+            <label for="inputUserName" class="font-weight-bold">Geri Dönüş Yorumu</label>
+            <label type="text" class="form-control" id="inputTitle">@Model.Mission.FeedBack</label>
+            <button type="button" onclick="send()" class="btn btn-success w-100"><h3>Gönder</h3></button>
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+        $(document).ready(function () {
+            $("div [data-id]").hide();
+            console.log("sas");
+        });
+
+        $(".rosetteLinkList div").click(function (e) {
+            $("div [data-id]").hide(); // Hides all the elements with attribute data-id
+            $("div [data-id='" + $(this).attr('data-tab-id') + "']").show();
+            e.preventDefault();
+        })
+
+    function send() {
+
+        var missionID=document.getElementById('missionId').value
+        var FilePath = document.getElementById('filePath').value
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SendMission", "Mission")',
+            data: { missionId: missionID, filePath: FilePath},
+        }).done(function (data) {
+            console.log("başarılı")
+            location.reload();
+        });
+    };
+
+
+
+
+            @*function PagerClick(projectId,index) {
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetMembersListForDetail", "Project")',
+                data: { projectId: projectId, page: index },
+        }).done(function (data) {
+            $('#tab1div').html(data);
+        });
+        }
+                function PagerClick1(projectId,index) {
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetMissionsListForDetail", "Project")',
+                data: { projectId: projectId, page: index },
+        }).done(function (data) {
+            $('#tab2div').html(data);
+        });
+        }
+                function PagerClick2(index) {
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetMyViewComponent", "Project")',
+            data: { projectId:1, page: index },
+        }).done(function (data) {
+            $('#tab1div').html(data);
+        });*@
+/*        }*/
+
+
+
+</script>

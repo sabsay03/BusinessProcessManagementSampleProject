@@ -26,12 +26,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
             this.missionHandler = missionHandler;
         }
 
-        // GET: MissionController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
+     
         // GET: MissionController/CreateMission
         public ActionResult CreateMission(int? id)
         {
@@ -111,13 +106,52 @@ namespace BusinessProcessManagementSampleProject.Controllers
             try
             {
                 missionHandler.DeleteMission(id);
-
-                return RedirectToAction("Project","Detail",new {projectId=projectId });
+                TempData["messageCreateOrEdit"] = "Görev İptal edilmiştir.";
+                TempData["successCreateOrEdit"] = true;
+                return RedirectToAction("Detail", "Project", new { projectId = projectId });
             }
             catch
             {
                 return View();
             }
         }
+
+        public ActionResult Detail(int missionId)
+        {
+            var mission = missionHandler.GetMissionDetailById(missionId);
+
+            var viewModel = new MissionDetailViewModel { Mission = mission };
+
+            return View(viewModel);
+        }
+        public JsonResult ApproveMission(int missionId,string feedBack)
+        {
+            var response = missionHandler.ApproveMission(missionId, feedBack);
+            TempData["messageCreateOrEdit"] = response.Message;
+            TempData["successCreateOrEdit"] = response.Success;
+
+            return Json(response);
+        }
+
+        public JsonResult SendBack(int missionId, string feedBack)
+        {
+            var response = missionHandler.SendBackMission(missionId, feedBack);
+            TempData["messageCreateOrEdit"] = response.Message;
+            TempData["successCreateOrEdit"] = response.Success;
+
+            return Json(response);
+        }
+
+        public JsonResult GiveExtraTime(int missionId,string feedBack, DateTime endDate,DateTime startDate)
+        {
+            var response = missionHandler.GiveExtraTime(missionId, feedBack,endDate,startDate);
+            TempData["messageCreateOrEdit"] = response.Message;
+            TempData["successCreateOrEdit"] = response.Success;
+
+            return Json(response);
+        }
+
+
+
     }
 }

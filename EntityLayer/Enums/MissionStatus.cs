@@ -12,6 +12,8 @@ namespace EntityLayer.Enums
         Waiting=1,
         Cancel = 2,
         Process=3,
-        Done = 4
+        Done = 4,
+        WaitingForApprove=5,
+        Timeout=6,
     }
 }

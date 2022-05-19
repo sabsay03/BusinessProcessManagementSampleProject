@@ -1,0 +1,193 @@
+﻿
+@model BusinessProcessManagementSampleProject.Models.Mission.MissionDetailViewModel
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="bg-white w-100 shadow p-3">
+    <div class="col-12">
+        <div class="rosettaGuideTxt">
+            @if (TempData["successCreateOrEdit"] != null)
+            {
+                if ((bool)TempData["successCreateOrEdit"] == true)
+                {
+                    <p class="alert alert-success">@TempData["messageCreateOrEdit"]</p>
+                }
+                else
+                {
+                    <p class="alert alert-danger">@TempData["messageCreateOrEdit"]</p>
+                }
+
+            }
+        </div>
+    </div>
+    <h3 class="text-center">@Model.Mission.Title</h3>
+    <div class="form-group">
+        <label type="text" class="form-control" id="inputTitle" hidden>@Model.Mission.Id</label>
+        @Html.HiddenFor(m => m.Mission.Id, new { id = "missionId" })
+    </div>
+    <div class="form-group">
+        <label for="inputUserName" class="font-weight-bold">Açıklama</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.Description</label>
+
+        <label for="inputUserName" class="font-weight-bold">Başlangıç Tarihi</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.StartDate.ToString("dd MMMM yyyy")</label>
+
+        <label for="inputUserName" class="font-weight-bold">Bitiş Tarihi</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.EndDate.ToString("dd MMMM yyyy")</label>
+
+        <label for="inputUserName" class="font-weight-bold">Durumu</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.MissionStatusString</label>
+
+        <label for="inputUserName" class="font-weight-bold">Proje Hocası</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.Manager.FirstName @Model.Mission.Manager.LastName</label>
+
+        <label for="inputUserName" class="font-weight-bold">Öğrenci Ad Soyad</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.StudenFullName</label>
+
+        <label for="inputUserName" class="font-weight-bold">Okul No</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.Mission.StudentNumber</label>
+    </div>
+    @if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.WaitingForApprove)
+    {
+        <div class="row">
+            <div class="col-md-12 rosetteLinkList">
+                <div data-tab-id="tab1" class="col-md-12"><a style="text-align:center" class="font-weight-bold">Onayla</a></div>
+                <div data-tab-id="tab2" class="col-md-12"><a style="text-align:center" class="font-weight-bold">Ek Süre Ver</a></div>
+                <div data-tab-id="tab3" class="col-md-12"><a style="text-align:center" class="font-weight-bold">İptal Et</a></div>
+            </div>
+        </div>
+    }
+    else if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Cancel || Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Done)
+    {
+
+    }
+    else if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Timeout)
+    {
+        <div class="row">
+            <div data-tab-id="tab2" class="col-md-12"><a style="text-align:center" class="font-weight-bold">Ek Süre Ver</a></div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12 rosetteLinkList">
+                <div data-tab-id="tab2" class="col-md-12"><a style="text-align:center" class="font-weight-bold">Ek Süre Ver</a></div>
+                <div data-tab-id="tab3" class="col-md-12"><a style="text-align:center" class="font-weight-bold">İptal Et</a></div>
+            </div>
+        </div>
+    }
+
+    <div>
+        <div class="row" data-id="tab1" id="tab1div">
+            <label for="inputUserName" class="font-weight-bold">Dosya Yolu</label>
+            <label type="text" class="form-control" id="inputTitle">@Model.Mission.FilePath</label>
+
+            <label for="inputUserName" class="font-weight-bold">Geri Dönüş</label>
+            <input type="text" class="form-control" id="feedBack" requried>
+            <br />
+            <br />
+
+            <div class=" row col-md-12">
+                <button type="button" onclick="sendApprove()" class="btn btn-success col-md-5"><h3>Onayla</h3></button>
+                <div class="col-md-2">
+
+                </div>
+                <button type="button" onclick="sendBack()" class="btn btn-success col-md-5"><h3>Geri gönder</h3></button>
+            </div>
+
+        </div>
+        <div class="row" data-id="tab2" id="tab2div">
+            <form asp-controller="Mission" asp-action="GiveExtraTime" method="POST">
+                <div class="form-group">
+                    <label for="inputUserName" class="font-weight-bold">Geri Dönüş</label>
+                    <input type="text" class="form-control" id="feedBackForTime" requried>
+                    <label for="inputUserName" class="font-weight-bold">Başlangıç Tarihi</label>
+                    <input type="date" class="form-control" id="StartDate" requried>
+                    <label for="inputUserName" class="font-weight-bold">Bitiş Tarihi</label>
+                    <input type="date" class="form-control" id="EndDate" requried>
+                </div>
+                <button type="button" onclick="giveTime()" class="btn btn-success w-100"><h3>Onayla</h3></button>
+            </form>
+        </div>
+        <div class="row" data-id="tab3" id="tab3div">
+            <div class="col-md-12 rosetteLinkList">
+                <form id="cancelMissionForm-@Model.Mission.Id" asp-controller="Mission" asp-action="Delete" asp-route-id="@Model.Mission.Id" asp-route-projectId="@Model.Mission.ProjectId" method="POST">
+                    <button type="submit" id="cancel" onclick="cancelMission(@Model.Mission.Id)" class="btn btn-success col-md-12"><h3>İptal Et</h3></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>
+        $(document).ready(function () {
+            $("div [data-id]").hide();
+            console.log("sas");
+        });
+
+        $(".rosetteLinkList div").click(function (e) {
+            $("div [data-id]").hide(); // Hides all the elements with attribute data-id
+            $("div [data-id='" + $(this).attr('data-tab-id') + "']").show();
+            e.preventDefault();
+        })
+
+    function sendApprove() {
+
+        var missionID = document.getElementById('missionId').value
+        var FeedBack = document.getElementById('feedBack').value
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ApproveMission", "Mission")',
+            data: { missionId: missionID, feedBack: FeedBack },
+        }).done(function (data) {
+            console.log("başarılı")
+            location.reload();
+        });
+    };
+     function sendBack() {
+
+        var missionID = document.getElementById('missionId').value
+        var FeedBack = document.getElementById('feedBack').value
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SendBack", "Mission")',
+            data: { missionId: missionID, feedBack: FeedBack },
+        }).done(function (data) {
+            console.log("başarılı")
+            location.reload();
+        });
+    };
+
+    function giveTime() {
+
+        var missionID = document.getElementById('missionId').value
+        var StartDate = document.getElementById('StartDate').value
+        var EndDate = document.getElementById('EndDate').value
+        var FeedBack = document.getElementById('feedBackForTime').value
+
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GiveExtraTime", "Mission")',
+            data: { missionId: missionID, feedBack: FeedBack, startDate: StartDate, endDate: EndDate },
+        }).done(function (data) {
+            console.log("başarılı")
+            location.reload();
+        });
+    };
+
+    function cancelMission(id) {
+
+        if (confirm("İptal etmek istediğinize emin misini?")) {
+            $('#cancelMissionForm-' + id).submit();
+        }
+    }
+
+        </script>

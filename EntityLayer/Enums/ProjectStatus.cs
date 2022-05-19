@@ -10,6 +10,8 @@ namespace EntityLayer.Enums
     {
         Active = 0,
         Cancel = 1,
-        Done = 2
+        Done = 2,
+        Process=3,
+        TimeOut=4,
     }
 }

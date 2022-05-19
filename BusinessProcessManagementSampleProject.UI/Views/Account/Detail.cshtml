@@ -1,0 +1,36 @@
+﻿@model WebUI.Models.UserDetailViewModel
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+
+
+<div class="bg-white w-100 shadow p-3">
+    <h3 class="text-center">Hesap Detay</h3>
+    <div class="form-group">
+        <label type="text" class="form-control" id="inputTitle" hidden>@Model.User.Id</label>
+    </div>
+    <div class="form-group">
+        <label for="inputUserName" class="font-weight-bold">Ad Soyad</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.User.UserFullName</label>
+        <label for="inputUserName" class="font-weight-bold">Okul No</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.User.StudentNo</label>
+
+        <label for="inputUserName" class="font-weight-bold">Email</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.User.Email</label>
+
+        <label for="inputUserName" class="font-weight-bold">Oluşturulma Tarihi</label>
+        <label type="text" class="form-control" id="inputTitle">@Model.User.CreateDate.ToString("dd MMMM yyyy")</label>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 rosetteLinkList">
+
+            <button type="submit" class="col-md-5 btn btn-success" onclick="location.href='@Url.Action("Index","Project")'"><h3>Projelerim</h3></button>
+
+            <button type="submit" class="col-md-5 btn btn-success" onclick="location.href='@Url.Action("Index","Mission")'"><h3>Görevlerim</h3></button>
+        </div>
+    </div>
+</div>

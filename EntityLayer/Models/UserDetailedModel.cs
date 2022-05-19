@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EntityLayer.Concrete;
+using EntityLayer.Concrete.Relations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +17,9 @@ namespace EntityLayer.Models
         public string Email { get; set; }
         public DateTime CreateDate { get; set; }
         public string StudentNo { get; set; }
+
+        public ICollection<ProjectMember> ProjectMembers { get; set; }
+        public ICollection<Mission> Tasks { get; set; }
 
     }
 }

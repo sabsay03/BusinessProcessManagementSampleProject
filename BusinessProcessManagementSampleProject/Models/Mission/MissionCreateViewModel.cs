@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace BusinessProcessManagementSampleProject.Models.Mission
 {
-    public class MissionCreateViewModel
+    public class MissionCreateViewModel : IValidatableObject
     {
         public int? Id { get; set; }
         [Required(ErrorMessage = "Öğrenci No gerekli.")]
         [Display(Name = "Öğrenci No:")]
-        public string StudentNumber { get;set; }
+        public string StudentNumber { get; set; }
         public string StudenFullName { get; set; }
 
         [Required(ErrorMessage = "Başlangıç Tarihi gerekli.")]
@@ -32,5 +32,18 @@ namespace BusinessProcessManagementSampleProject.Models.Mission
         [Required(ErrorMessage = "Proje seçmeniz gerekli.")]
         [Display(Name = "Proje:")]
         public int ProjectId { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (EndDate < StartDate)
+            {
+                yield return new ValidationResult(
+                    errorMessage: "Bitiş Tarihi başlangıç tarihinden önce olamaz.",
+                    memberNames: new[] { "EndDate" }
+               );
+            }
+        }
     }
+
+
 }

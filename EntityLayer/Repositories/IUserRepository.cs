@@ -12,6 +12,9 @@ namespace EntityLayer.Repositories
     public interface IUserRepository
     {
         User GetUserByStudentNo(string studentNo);
+        User GetUserById(int userId);
+
+        List<User> GetAllTeacher();
 
     }
 }

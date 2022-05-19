@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Helpers;
 using BusinessProcessManagementSampleProject.Models;
 using EntityLayer.Concrete;
+using EntityLayer.Handler;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,12 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
         private readonly SignInManager<User> signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager):base()
+        private readonly IUserHandler userHandler;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,IUserHandler userHandler):base()
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.userHandler = userHandler;
         }
 
         [HttpGet]
@@ -42,8 +45,6 @@ namespace BusinessProcessManagementSampleProject.Controllers
                     UserName = model.UserName,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    StudentNumber=model.StudentNumber
-                   
                 };
 
                 var result = await userManager.CreateAsync(user,model.Password);
@@ -67,7 +68,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) return LocalRedirect("/Project/CreateProject");
+            if (User.Identity.IsAuthenticated) return LocalRedirect("/Project/Index");
             return View();
         }
 
@@ -95,6 +96,15 @@ namespace BusinessProcessManagementSampleProject.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
+        }
+
+        public ActionResult Detail()
+        {
+            var user = userHandler.GetUserById(GetCurrentId());
+
+            var viewModel = new UserDetailViewModel { User = user};
+
+            return View(viewModel);
         }
 
     }

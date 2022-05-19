@@ -9,6 +9,7 @@ using System;
 
 namespace BusinessProcessManagementSampleProject.Controllers
 {
+
     public class ProjectController : BaseController
     {
         public readonly IProjectHandler projectHandler;
@@ -55,7 +56,6 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
         public ActionResult Index(int? page, string currentFilter, string name)
         {
-            var currentState = GetCurrentActionState();
             ViewBag.name = name;
             var projects = projectHandler.GetProjectsForManager(GetCurrentId(), page ?? 1, _pageSize, name);
 
@@ -66,7 +66,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
             ViewBag.CurrentFilter = name;
 
-            var viewModel = new ListProjectsViewModel { Projects = projects, ActionResponse=currentState };
+            var viewModel = new ListProjectsViewModel { Projects = projects, ActionResponse=null };
 
             return View(viewModel);
         }
@@ -146,19 +146,18 @@ namespace BusinessProcessManagementSampleProject.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public JsonResult Delete(int id)
         {
             try
             {
-                projectHandler.DeleteProject(id);
-
-                SetCurrentActionState(ActionType.Delete,"Proje İptal Edilmiştir");
-
-                return RedirectToAction(nameof(Index));
+                var number=projectHandler.DeleteProject(id);
+                TempData["messageCreateOrEdit"] = "Proje İptal edilmiştir.";
+                TempData["successCreateOrEdit"] = true;
+                return Json(number);
             }
             catch
             {
-                return View();
+                return Json(null);
             }
         }
 
@@ -179,19 +178,13 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
             return View(viewModel);
         }
-
-
-        private void SetCurrentActionState(ActionType actionType, string actionResult)
+        public JsonResult CompleteProject(int projectId)
         {
-            TempData["AdminViewModel"] =JsonConvert.SerializeObject(new ActionResponse { ActionType = actionType, ActionMessage = actionResult });
-        }
+            var response = projectHandler.CompleteProject(projectId);
+            TempData["messageCreateOrEdit"] = response.Message;
+            TempData["successCreateOrEdit"] = response.Success;
 
-        private ActionResponse GetCurrentActionState()
-        {
-            if (TempData["AdminViewModel"] != null)
-                return TempData["AdminViewModel"] as ActionResponse;
-
-            else return null;
+            return Json(response);
         }
     }
 }
