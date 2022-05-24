@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete;
+using EntityLayer.Enums;
 using EntityLayer.Models;
 using PagedList.Core;
 using System;
@@ -25,8 +26,11 @@ namespace EntityLayer.Repositories
         int UpdateProject(ProjectModel project);
         int UpdateProjectForComplete(int projectId);
 
-
+        List<Project> GetAllActiveProcessProject();
+        List<Project> GetAllProcessProject();
         int SaveProject(ProjectModel project);
+
+        int UpdateProjectStatus(int projectId,ProjectStatus status);
 
     }
 }

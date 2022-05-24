@@ -75,7 +75,7 @@ namespace BusinessProcessManagementSampleProject.UI.Controllers
 
             ViewBag.CurrentFilter = name;
 
-            var viewModel = new ListProjectsViewModel { Projects = projects };
+            var viewModel = new ListProjectsViewModel { Projects = projects,Id=GetCurrentId()};
 
             return View(viewModel);
         }
@@ -83,6 +83,7 @@ namespace BusinessProcessManagementSampleProject.UI.Controllers
         public ActionResult Detail(int projectId)
         {
             var project = projectHandler.GetProjectDetailById(projectId);
+            ViewBag.StudentList = dropDownHelper.GetProjectMember(projectId);
 
             var viewModel = new ProjectDetailViewModel { Project = project };
 

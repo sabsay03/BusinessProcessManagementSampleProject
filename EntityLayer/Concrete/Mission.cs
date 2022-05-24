@@ -25,7 +25,7 @@ namespace EntityLayer.Concrete
         public string FeedBack { get; set; }
 
         // List
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<CommentLog> Comments { get; set; }
         public int ProjectId { get; set; }
         public Project Project { get; set; }
     }

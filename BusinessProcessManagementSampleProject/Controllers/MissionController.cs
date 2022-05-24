@@ -95,7 +95,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
             }
             ViewBag.ProjectSelectListItems = dropDownHelper.ProjectSelectListByManager(GetCurrentId());
             ModelState.AddModelError("", "Görev Ekleme Başarısız.");
-            return View(model);
+            return View();
         }
 
         // POST: MissionController/Delete/5

@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI", "BusinessProcessMan
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrganizationService", "OrganizationService", "{711902BD-7B19-4DFC-AAFD-CFEFCF6E1CCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganizationService", "OrganizationService\OrganizationService.csproj", "{C187AEA4-CD21-4992-90FC-109988EFE874}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,9 +43,16 @@ Global
 		{8F37ED9A-A24D-46F4-B675-F0A75F6E352B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F37ED9A-A24D-46F4-B675-F0A75F6E352B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F37ED9A-A24D-46F4-B675-F0A75F6E352B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C187AEA4-CD21-4992-90FC-109988EFE874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C187AEA4-CD21-4992-90FC-109988EFE874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C187AEA4-CD21-4992-90FC-109988EFE874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C187AEA4-CD21-4992-90FC-109988EFE874}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C187AEA4-CD21-4992-90FC-109988EFE874} = {711902BD-7B19-4DFC-AAFD-CFEFCF6E1CCD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9321012D-FECD-436D-B171-C8C0F6E60A97}

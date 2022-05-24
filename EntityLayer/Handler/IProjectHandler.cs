@@ -31,5 +31,8 @@ namespace EntityLayer.Handler
         IPagedList<ProjectModel> GetProjectsForManager(int managerId, int pageNumber, int pageSize, string searchFilter);
 
         IPagedList<ProjectRequestModel> GetProjectRequestsForManager(int managerId, int pageNumber, int pageSize, string searchFilter);
+
+        int DeniedMember(int projectId,int memberId);
+        int updateMemberRequest(int projectId, int memberId);
     }
 }

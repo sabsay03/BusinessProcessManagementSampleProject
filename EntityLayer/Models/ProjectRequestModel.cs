@@ -20,5 +20,6 @@ namespace EntityLayer.Models
         public string StudentNo { get; set; }
 
         public ProjectRequestStatus ProjectRequestStatus { get; set; }
+        public string ProjectRequestStatusString { get; set; }
     }
 }

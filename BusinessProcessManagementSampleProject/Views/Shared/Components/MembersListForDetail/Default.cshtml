@@ -21,7 +21,6 @@
             <tr>
                 <th scope="col">Adı Soyadı</th>
                 <th scope="col">Öğrenci No</th>
-                <th scope="col">İstatistik</th>
             </tr>
         </thead>
         <tbody>
@@ -31,14 +30,6 @@
                     <tr>
                         <td>@member.UserFullName</td>
                         <td>@member.StudentNo</td>
-                        <th>
-                            <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Project", new { member.Id })'" />
-
-                            <form id="removeBadgeForm-@member.Id" method="post" action="~/Project/Delete/@member.Id">
-                                <a href="#" onclick="removeProject(@member.Id)"><i class="delete" data-toggle="tooltip" title="Sil">iptal</i></a>
-                            </form>
-                        </th>
-
                     </tr>
                 }
             }

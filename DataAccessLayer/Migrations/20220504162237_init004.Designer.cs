@@ -37,7 +37,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("MissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TaskId")
+                    b.Property<int>("MissionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")

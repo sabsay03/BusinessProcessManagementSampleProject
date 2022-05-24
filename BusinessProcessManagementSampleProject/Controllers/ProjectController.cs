@@ -44,6 +44,24 @@ namespace BusinessProcessManagementSampleProject.Controllers
             ModelState.AddModelError("", "Öğrenci Ekleme Başarısız.");
             return View(model);
         }
+        [HttpPost]
+        public JsonResult ApproveProjectMember(int projectId, int memberId)
+        {
+                var projectMemberModel = new ProjectMemberModel { MemberId = memberId, ProjecId =projectId };
+
+            var response = projectHandler.AddStudenToProject(projectMemberModel);
+            projectHandler.updateMemberRequest(projectId,memberId);
+                TempData["messageCreateOrEdit"] = response.Message;
+                TempData["successCreateOrEdit"] = response.Success;
+            return Json(Response);
+        }
+        [HttpPost]
+        public JsonResult DeniedrojectMember(int projectId, int memberId)
+        {
+
+            var response = projectHandler.DeniedMember(projectId,memberId);
+            return Json(Response);
+        }
 
         public IActionResult GetMembersListForDetail(int projectId,int page)
         {
@@ -66,7 +84,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
 
             ViewBag.CurrentFilter = name;
 
-            var viewModel = new ListProjectsViewModel { Projects = projects, ActionResponse=null };
+            var viewModel = new ListProjectsViewModel { Projects = projects, ActionResponse=null,Id=GetCurrentId() };
 
             return View(viewModel);
         }
@@ -75,7 +93,7 @@ namespace BusinessProcessManagementSampleProject.Controllers
         public ActionResult Detail(int projectId)
         {
             var project=projectHandler.GetProjectDetailById(projectId);
-
+            ViewBag.StudentList= dropDownHelper.GetProjectMember(projectId);
             var viewModel = new ProjectDetailViewModel { Project = project};
 
             return View(viewModel);

@@ -49,3 +49,8 @@
     <pager class="pager-container" options="@PagedList.Core.Mvc.PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" list="@Model.Projects" action="@Url.Action("Index")" />
 </div>
 <button type="submit" class="btn btn-success w-100" onclick="location.href='@Url.Action("CreateProjectRequest","Project")'"><h3>Yeni Proje Talep Et</h3></button>
+<br />
+<br />
+<div>
+    @await Component.InvokeAsync("CommentLogListForManager", new { memberId = Model.Id })
+</div>

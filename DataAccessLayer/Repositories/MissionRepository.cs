@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
+using EntityLayer.Enums;
 using EntityLayer.Models;
 using EntityLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,24 @@ namespace DataAccessLayer.Repositories
                 databaseContext.SaveChanges();
                 return id;
 
+            }
+        }
+
+        public List<Mission> GetAllProjectMission(int projectId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                return databaseContext.Tasks.Include(t => t.Project).Include(t => t.Member).Where(t => t.ProjectId == projectId).ToList();
+            }
+        }
+
+        public List<Mission> GetAllWaitingProcessMission()
+        {
+            using (Context databaseContext = new Context())
+            {
+                return databaseContext.Tasks.Include(p => p.Member).Include(p => p.Project)
+                    .Where(p => p.MissionStatus == EntityLayer.Enums.MissionStatus.Waiting  || p.MissionStatus == EntityLayer.Enums.MissionStatus.Process )
+                    .ToList();
             }
         }
 
@@ -53,7 +72,7 @@ namespace DataAccessLayer.Repositories
                         ProjectId = t.ProjectId,
                         LastName = t.Member.LastName,
                         FirstName = t.Member.FirstName,
-                        MissionStatus=t.MissionStatus
+                        MissionStatus = t.MissionStatus
                     }).OrderBy(t => t.Id)
                     .Skip((pagenumber - 1) * pageSize).Take(pageSize).ToList();
 
@@ -83,11 +102,11 @@ namespace DataAccessLayer.Repositories
                     LastName = p.Member.LastName,
                     StudentId = (int)p.MemberId,
                     StudentNumber = p.Member.StudentNumber,
-                    ManagerId = p.Project.ManagerId,
+                    ManagerId = (int)p.Project.ManagerId,
                     ManagerName = p.Project.Manager.FirstName,
-                    Manager=p.Project.Manager,
-                    FilePath=p.FilePath,
-                    FeedBack=p.FeedBack
+                    Manager = p.Project.Manager,
+                    FilePath = p.FilePath,
+                    FeedBack = p.FeedBack
                 }).FirstOrDefault();
             }
         }
@@ -120,17 +139,17 @@ namespace DataAccessLayer.Repositories
                         Select(p => new MissionModel
                         {
                             Id = p.Id,
-                            Description = p.Project.Description,
-                            Title = p.Project.Title,
-                            StartDate = p.Project.StartDate,
-                            EndDate = p.Project.EndDate,
+                            Description = p.Description,
+                            Title = p.Title,
+                            StartDate = p.StartDate,
+                            EndDate = p.EndDate,
                             MissionStatus = p.MissionStatus,
                             ProjectId = p.ProjectId,
                             FirstName = p.Member.FirstName,
                             LastName = p.Member.LastName,
                             StudentId = (int)p.MemberId,
                             StudentNumber = p.Member.StudentNumber,
-                            ManagerId = p.Project.ManagerId,
+                            ManagerId = (int)p.Project.ManagerId,
                             ManagerName = p.Project.Manager.FirstName
                         });
 
@@ -141,6 +160,24 @@ namespace DataAccessLayer.Repositories
                 //        );
 
                 return query.OrderBy(p => p.Id).ToPagedList(pageNumber, pageSize);
+            }
+        }
+
+        public List<Mission> GetProjectMissionForMember(int memberUd, int projectId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                return databaseContext.Tasks.Include(t => t.Project).Include(t => t.Member).Where(t => t.ProjectId == projectId && t.MemberId == memberUd).ToList();
+            }
+        }
+
+        public List<Mission> GetsWaitingProcessMission()
+        {
+            using (Context databaseContext = new Context())
+            {
+                return databaseContext.Tasks.Include(p => p.Member).Include(p => p.Project)
+                    .Where(p => p.MissionStatus == EntityLayer.Enums.MissionStatus.Waiting || p.MissionStatus == EntityLayer.Enums.MissionStatus.Process)
+                    .ToList();
             }
         }
 
@@ -228,6 +265,20 @@ namespace DataAccessLayer.Repositories
                 databaseContext.SaveChanges();
 
                 return entitiy.Id;
+            }
+        }
+
+        public int UpdateMissionStatus(int missionId, MissionStatus status)
+        {
+            using (Context databaseContext = new Context())
+            {
+                var entity = GetById(missionId);
+                databaseContext.Tasks.Attach(entity);
+
+                entity.MissionStatus = status;
+                databaseContext.SaveChanges();
+
+                return entity.Id;
             }
         }
 

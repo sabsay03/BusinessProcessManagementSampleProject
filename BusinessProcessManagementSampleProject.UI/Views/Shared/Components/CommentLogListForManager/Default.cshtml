@@ -1,0 +1,49 @@
+﻿@model WebUI.Models.CommentLog.CommentLogViewModel
+@using EntityLayer.Enums
+
+<h2>Proje Bildirimleri</h2>
+@foreach (var log in Model.ProjectsLog)
+{
+    <div class="col-12">
+        <div class="rosettaGuideTxt">
+
+            @if (log.commentType == CommentType.Done || log.commentType == CommentType.Active || log.commentType == CommentType.Process)
+            {
+                <div>
+                    <p class="alert alert-success">@log.Text</p>
+                </div>
+            }
+            else if (log.commentType == CommentType.WaitingForApprove)
+            {
+                <p class="alert alert-warning">@log.Text</p>
+            }
+            else
+            {
+                <p class="alert alert-danger">@log.Text</p>
+            }
+        </div>
+    </div>
+}
+<h2>Görev Bildirimleri</h2>
+@foreach (var log in Model.MissionsLog)
+{
+    <div class="col-12">
+        <div class="rosettaGuideTxt">
+
+            @if (log.commentType == CommentType.Done || log.commentType == CommentType.Active || log.commentType == CommentType.Process)
+            {
+                <div>
+                    <p class="alert alert-success">@log.Text</p>
+                </div>
+            }
+            else if (log.commentType == CommentType.WaitingForApprove)
+            {
+                <p class="alert alert-warning">@log.Text</p>
+            }
+            else
+            {
+                <p class="alert alert-danger">@log.Text</p>
+            }
+        </div>
+    </div>
+}

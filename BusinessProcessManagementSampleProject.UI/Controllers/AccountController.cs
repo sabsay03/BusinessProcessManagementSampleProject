@@ -52,19 +52,8 @@ namespace BusinessProcessManagementSampleProject.UI.Controllers
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var result2=await userManager.AddToRoleAsync(user, "Student");
-
-                    if(result2.Succeeded)
-                    {
-                        return RedirectToAction("Login", "Account");
-                    }
-                    else
-                    {
-                        foreach (var item in result.Errors)
-                        {
-                            ModelState.AddModelError("", item.Description);
-                        }
-                    }
+                return RedirectToAction("Login", "Account");
+                    
                 }
                 else
                 {

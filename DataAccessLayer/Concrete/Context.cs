@@ -17,7 +17,7 @@ namespace DataAccessLayer.Concrete
             optionsBuilder.UseSqlServer("Server=SABRI-PC\\SQLEXPRESS;database=BpmDb;integrated security=true");
         }
 
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentLog> Comments { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Mission> Tasks { get; set; }
         public DbSet<ProjectMember> ProjectMembers { get; set; }

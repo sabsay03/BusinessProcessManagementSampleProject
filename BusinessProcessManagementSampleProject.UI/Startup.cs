@@ -52,6 +52,8 @@ namespace BusinessProcessManagementSampleProject.UI
             services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProjectRequestRepository, ProjectRequestRepository>();
+            services.AddScoped<ICommentLogRepository, CommentLogRepository>();
+            services.AddScoped<ICommentLogHandler, CommentLogHandler>();
 
             services.AddScoped<IMissionRepository, MissionRepository>();
             services.AddScoped<IProjectHandler, ProjectHandler>();

@@ -3,6 +3,7 @@ using EntityLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace EntityLayer.Concrete
         public string FilePath { get; set; }
 
         public ICollection<ProjectMember> ProjectMembers { get; set; }
+        public ICollection<CommentLog> Comments { get; set; }
 
         public IList<Mission> Tasks { get; set; }
 

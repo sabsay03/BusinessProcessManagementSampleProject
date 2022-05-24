@@ -16,11 +16,12 @@ namespace BusinessLayer.Handler
     {
         private readonly IMissionRepository missionRepository;
         private readonly IProjectMemberRepository projectMemberRepository;
-
-        public MissionHandler(IMissionRepository missionRepository, IProjectMemberRepository projectMemberRepository)
+        private readonly ICommentLogRepository commentLogRepository;
+        public MissionHandler(IMissionRepository missionRepository, IProjectMemberRepository projectMemberRepository,ICommentLogRepository commentLogRepository)
         {
             this.missionRepository = missionRepository;
             this.projectMemberRepository = projectMemberRepository;
+            this.commentLogRepository = commentLogRepository;
         }
 
         public MessageResponse CreateMission(MissionModel missionModel)
@@ -30,8 +31,8 @@ namespace BusinessLayer.Handler
             {
                 return new MessageResponse { Success = false, Message = "Bu Kişi Belirtilen Projede Yer Almıyor" };
             }
-            var enddate=projectMemberCheck.Project.StartDate;
-            var startdate=projectMemberCheck.Project.EndDate;
+            var enddate=projectMemberCheck.Project.EndDate;
+            var startdate=projectMemberCheck.Project.StartDate;
             if (missionModel.StartDate<startdate || missionModel.StartDate>enddate || missionModel.EndDate<startdate || missionModel.EndDate>enddate)
             {
                 return new MessageResponse { Success = false, Message = "Görev tarihleri Proje tarihleri dışında ayarlanmıştır. Lütfen tarihleri düzenleyip tekrar giriniz." };
@@ -43,9 +44,20 @@ namespace BusinessLayer.Handler
             {
                 return new MessageResponse { Success = false, Message = "Bu kişiye zaten bu isimde bir görev tanımlanmıştır" };
             }
-            
+            var id=missionRepository.SaveMission(missionModel);
 
-            missionRepository.SaveMission(missionModel);
+            var mission = GetById(id);
+
+            CommentLog log = new CommentLog
+            {
+                ProjectId = mission.ProjectId,
+                Date = DateTime.Now,
+                MissionId = id,
+                Text = ($"{mission.Project.Title}'de ki {mission.Title} İsminde Görev oluşturulmuştur."),
+                commentType = EntityLayer.Enums.CommentType.Active
+            };
+            commentLogRepository.CreateCommentLog(log);
+
             return new MessageResponse { Success = true, Message = "Görev tanımlanmıştır" };
         }
         public MessageResponse UpdateMission(MissionModel missionModel)
@@ -74,6 +86,17 @@ namespace BusinessLayer.Handler
 
         public int DeleteMission(int id)
         {
+            var mission = GetById(id);
+
+            CommentLog log = new CommentLog{
+                ProjectId = mission.ProjectId,
+                Date = DateTime.Now,
+                MissionId = id,
+                Text = ($"{mission.Project.Title}'de ki {mission.Title} İsimli Görev iptal edilmiştir."),
+                commentType = EntityLayer.Enums.CommentType.Cancel
+            };
+
+            commentLogRepository.CreateCommentLog(log);
             return missionRepository.DeleteMission(id);
         }
 
@@ -130,6 +153,17 @@ namespace BusinessLayer.Handler
             }
             else
             {
+
+                CommentLog log = new CommentLog
+                {
+                    ProjectId = mission.ProjectId,
+                    Date = DateTime.Now,
+                    MissionId = missionId,
+                    Text = ($"{mission.Project.Title}'de ki {mission.Title} İsimli Görev Onay Bekliyor."),
+                    commentType = EntityLayer.Enums.CommentType.WaitingForApprove
+                };
+
+                commentLogRepository.CreateCommentLog(log);
                 missionRepository.UpdateForFinishMission(missionId, filePath);
                 return new MessageResponse { Success = true, Message = "Proje Hocaya gönderilmiştir." };
 
@@ -138,7 +172,18 @@ namespace BusinessLayer.Handler
 
         public MessageResponse ApproveMission(int missionId, string feedBack)
         {
+            var mission = missionRepository.GetById(missionId);
 
+            CommentLog log = new CommentLog
+            {
+                ProjectId = mission.ProjectId,
+                Date = DateTime.Now,
+                MissionId = missionId,
+                Text = ($"{mission.Project.Title}'de ki {mission.Title} Görev Onaylanmıştır."),
+                commentType = EntityLayer.Enums.CommentType.Done
+            };
+
+            commentLogRepository.CreateCommentLog(log);
             missionRepository.UpdateForApprove(missionId, feedBack);
 
             return new MessageResponse { Success = true, Message = "Görev Onaylanmıştır." };
@@ -148,6 +193,16 @@ namespace BusinessLayer.Handler
 
         public MessageResponse GiveExtraTime(int missionId, string feedBack, DateTime endDate, DateTime startDate)
         {
+            var mission = missionRepository.GetById(missionId);
+
+            CommentLog log = new CommentLog
+            {
+                ProjectId = mission.ProjectId,
+                Date = DateTime.Now,
+                MissionId = missionId,
+                Text = ($"{mission.Project.Title}'de ki {mission.Title} Görevine ek süre verilmiştir."),
+                commentType = EntityLayer.Enums.CommentType.Process
+            };
 
             missionRepository.UpdatForExtraTime(missionId, feedBack, endDate, startDate);
 
@@ -156,9 +211,34 @@ namespace BusinessLayer.Handler
 
         public MessageResponse SendBackMission(int missionId, string feedBack)
         {
+
+            var mission = missionRepository.GetById(missionId);
+
+            CommentLog log = new CommentLog
+            {
+                ProjectId = mission.ProjectId,
+                Date = DateTime.Now,
+                MissionId = missionId,
+                Text = ($"{mission.Project.Title}'de ki {mission.Title} Görev geri gönderilmiştir."),
+                commentType = EntityLayer.Enums.CommentType.WaitingForApprove
+            };
+
+            commentLogRepository.CreateCommentLog(log);
             missionRepository.UpdateForSendBack(missionId, feedBack);
 
             return new MessageResponse { Success = true, Message = "Görev Geri gönderilmiştir." };
+        }
+
+        public List<Mission> GetProjectMissionForMember(int memberId, int projectId)
+        {
+            return missionRepository.GetProjectMissionForMember(memberId, projectId);
+
+
+        }
+
+        public List<Mission> GetAllProjectMission(int projectId)
+        {
+            return missionRepository.GetAllProjectMission( projectId);
         }
     }
 }

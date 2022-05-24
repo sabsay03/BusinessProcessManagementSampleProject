@@ -57,7 +57,7 @@
             <br />
             <br />
             <button type="button" onclick="sendApprove()" class="btn btn-success col-md-12"><h3>Tamamla</h3></button>
-           <button type="submit" id="cancel" onclick="cancelMission(@Model.Project.Id)" class="btn btn-success col-md-12"><h3>İptal Et</h3></button>
+            <button type="submit" id="cancel" onclick="cancelMission(@Model.Project.Id)" class="btn btn-success col-md-12"><h3>İptal Et</h3></button>
         </div>
     </div>
     <div>
@@ -68,20 +68,42 @@
             @await Component.InvokeAsync("MissionListForDetail", new { projectId = Model.Project.Id })
         </div>
         <div class="row" data-id="tab3" id="tab3div">
-            tab3
+            <label class="control-label"></label>
+            <select id="memberSelectList" asp-items="ViewBag.StudentList" class="form-control"></select>
+            <div class="row col-lg-12">
+                <div class="col-lg-6">
+                    <div id="chartdiv" style="width:600px; height:400px"> </div>
+                </div>
+                <div id="stats" class="col-lg-6">
+                    <label for="inputUserName" class="font-weight-bold">Toplam Görev</label>
+                    <label type="text" class="form-control" id="totalMission"></label>
+
+                    <label for="inputUserName" class="font-weight-bold">Aktif Görev</label>
+                    <label type="text" class="form-control" id="activeMission"></label>
+
+                    <label for="inputUserName" class="font-weight-bold">İptal Olan Görev</label>
+                    <label type="text" class="form-control" id="cancelMission"></label>
+
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     $(document).ready(function () {
         $("div [data-id]").hide();
         console.log("sas");
 
-
+        $("#stats").hide();
     });
+
+     var routeUrl = {
+        GetChart: '@Url.Action("MissionChart", "Chart")'
+    }
 
     $(".rosetteLinkList div").click(function (e) {
         $("div [data-id]").hide(); // Hides all the elements with attribute data-id
@@ -150,4 +172,61 @@
         }
     }
 
+
+    $('#memberSelectList').on("change", function () {
+
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(DrawonLoad);
+
+
+    });
+
+    function DrawonLoad() {
+
+        var request = {
+            id: $('#memberSelectList').val(),
+            projectID :document.getElementById('projectId').value
+        };
+
+        if ($('#memberSelectList').val() != "") {
+
+            $.ajax({
+                type: "POST",
+                url: routeUrl.GetChart,
+                data: request,
+                success: successFunc,
+                error: errorFunc
+            });
+            function successFunc(chartsdata) {
+                var Data = chartsdata.jsonlist;
+                var data = new google.visualization.DataTable();
+                console.log(Data);
+
+                data.addColumn("string", "statu");
+                data.addColumn("number", "count");
+
+                for (var i = 0; i < 5; i++) {
+                    data.addRow([Data[i].statu, Data[i].count]);
+                    console.log(i)
+                }
+                console.log(data);
+                var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+                chart.draw(data,
+                    {
+                        title: "Görev İstatistik",
+                        position: "top",
+                        fontsize: "16px"
+                    });
+                document.getElementById('totalMission').innerHTML = chartsdata.totalCount;
+                document.getElementById('activeMission').innerHTML = chartsdata.activecount;
+                document.getElementById('cancelMission').innerHTML = chartsdata.cancelCount;
+
+                $("#stats").show();
+            }
+            function errorFunc(err) {
+                console.log(err);
+            }
+
+        }
+    }
 </script>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityLayer.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
-    public class Comment
+    public class CommentLog
     {
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
-        public int MemberId { get; set; }
-        public User Member { get; set; }
         public DateTime Date { get; set; }
-        public int TaskId { get; set; }
+        public int? MissionId { get; set; }
+        public CommentType commentType { get; set; }
+        public int ProjectId { get; set; }
+        public Project Project { get; set; }
         public Mission Mission { get; set; }
 
     }

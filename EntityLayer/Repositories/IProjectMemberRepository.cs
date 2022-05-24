@@ -15,5 +15,11 @@ namespace EntityLayer.Repositories
         Tuple<List<UserDetailedModel>, int> GetMembers(int projectId, int pagenumber, int pageSize, string searchFilter);
         IPagedList<ProjectModel> GetProjectsForMember(int memberId, int pagenumber, int pageSize, string searchFilter);
         int SaveProjectMember(ProjectMemberModel projectMember);
+        int DeniedMember(int projectId,int memberId);
+        int updateMemberRequest(int projectId, int memberId);
+
+        List<ProjectMember> GetActiveProjectMember(int projectId);
+
+        
     }
 }

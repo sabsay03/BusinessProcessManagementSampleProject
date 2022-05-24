@@ -34,7 +34,7 @@
                     <td>@project.StartDate.ToString("dd MMM yyyy")</td>
                     <td> @project.EndDate.ToString("dd MMM yyyy")</td>
                     <th scope="col">@project.ProjectStatusString</th>
-                    <th scope="row" >
+                    <th scope="row">
                         <input type="submit" value="Detay" onclick="location.href='@Url.Action("Detail", "Project",new {projectId=project.Id})'" />
                         <input type="submit" value="Edit" onclick="location.href='@Url.Action("CreateProject", "Project",new {projectId=project.Id})'" />
                     </th>
@@ -47,6 +47,13 @@
 <div class="float-right">
     <pager class="pager-container" options="@PagedList.Core.Mvc.PagedListRenderOptions.Bootstrap4PageNumbersPlusPrevAndNext" list="@Model.Projects" action="@Url.Action("Index")" />
 </div>
+<br />
+<br />
+<div>
+    @await Component.InvokeAsync("CommentLogListForManager", new { managerId = Model.Id })
+</div>
+
+
 
 <script>
 

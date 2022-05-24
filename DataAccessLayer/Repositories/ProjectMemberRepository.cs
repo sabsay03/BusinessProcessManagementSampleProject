@@ -81,7 +81,7 @@ namespace DataAccessLayer.Repositories
                             Title = p.Project.Title,
                             StartDate = p.Project.StartDate,
                             EndDate = p.Project.EndDate,
-                            ManagerId = p.Project.ManagerId,
+                            ManagerId = (int)p.Project.ManagerId,
                             ProjectStatus = p.Project.ProjectStatus
                         });
 
@@ -93,6 +93,49 @@ namespace DataAccessLayer.Repositories
 
                 return query.OrderBy(p => p.Id).ToPagedList(pagenumber, pageSize);
 
+            }
+        }
+
+        public List<ProjectMember> GetActiveProjectMember(int projectId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                return databaseContext.ProjectMembers.Include(pm => pm.Project).Include(pm => pm.Member).Where(pm => pm.ProjecId == projectId).ToList();
+            }
+        }
+
+        public int DeniedMember(int projectId, int memberId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                var member = getProjectRequest(projectId, memberId);
+
+                databaseContext.ProjectRequests.Attach(member);
+                member.ProjectRequestStatus = EntityLayer.Enums.ProjectRequestStatus.Rejected;
+                databaseContext.SaveChanges();
+                return 1;
+            }
+        }
+
+        public ProjectRequest getProjectRequest(int projectId, int memberId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                return databaseContext.ProjectRequests.Where(pq => pq.ProjectId == projectId && pq.UserId == memberId).FirstOrDefault();
+            }
+        }
+
+        public int updateMemberRequest(int projectId, int memberId)
+        {
+            using (Context databaseContext = new Context())
+            {
+                var member = getProjectRequest(projectId, memberId);
+
+                databaseContext.ProjectRequests.Attach(member);
+                member.ProjectRequestStatus = EntityLayer.Enums.ProjectRequestStatus.Approved;
+                databaseContext.SaveChanges();
+
+                return 1;
             }
         }
     }

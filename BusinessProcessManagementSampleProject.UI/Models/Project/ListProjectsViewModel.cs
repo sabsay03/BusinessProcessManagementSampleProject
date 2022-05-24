@@ -12,5 +12,7 @@ namespace WebUI.Models.Project
         public IPagedList<ProjectModel> Projects { get; set; }
         public ActionResponse ActionResponse { get; set; }
 
+        public int Id { get; set; }
+
     }
 }

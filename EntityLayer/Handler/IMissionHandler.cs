@@ -22,6 +22,10 @@ namespace EntityLayer.Handler
         MessageResponse GiveExtraTime(int missionId, string feedBack, DateTime endDate, DateTime startDate);
         MessageResponse CreateMission(MissionModel missionModel);
         IPagedList<MissionModel> GetMissionForMember(int memberId, int pageNumber, int pageSize, string searchFilter);
+
+        List<Mission> GetProjectMissionForMember(int memberId, int projectId);
+
+        List<Mission> GetAllProjectMission(int projectId);
         int DeleteMission(int id);
     }
 }

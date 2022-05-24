@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
+using EntityLayer.Enums;
 using EntityLayer.Models;
 using EntityLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -89,7 +90,7 @@ namespace DataAccessLayer.Repositories
                      Title = p.Title,
                      StartDate = p.StartDate,
                      EndDate = p.EndDate,
-                     ManagerId = p.ManagerId,
+                     ManagerId = (int)p.ManagerId,
                      ProjectStatus = p.ProjectStatus
                  });
 
@@ -126,7 +127,7 @@ namespace DataAccessLayer.Repositories
         {
             using (var databaseContext = new Context())
             {
-                return databaseContext.Projects.Where(p => p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Active && p.ManagerId == managerId).OrderBy(p => p.Id).ToList();
+                return databaseContext.Projects.Where(p => (p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Active || p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Process) && p.ManagerId == managerId).OrderBy(p => p.Id).ToList();
             }
         }
 
@@ -170,6 +171,52 @@ namespace DataAccessLayer.Repositories
                 databaseContext.SaveChanges();
 
                 return projectId;
+            }
+        }
+
+        public List<Project> GetAllActiveProcessProject()
+        {
+            using (var databaseContext = new Context())
+            {
+                return databaseContext.Projects.Include(p=> p.Tasks).Include(p=>p.ProjectMembers).ThenInclude(pm=> pm.Member).Where(p => p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Active || p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Process).OrderBy(p => p.Id).ToList();
+            }
+        }
+
+        public int UpdateProjectStatus(int projectId, ProjectStatus status)
+        {
+            using (var databaseContext = new Context())
+            {
+                var Entitiy = GetById(projectId);
+
+                databaseContext.Projects.Attach(Entitiy);
+
+                Entitiy.ProjectStatus = status;
+                foreach (var item in Entitiy.Tasks)
+                {
+                    if (status == ProjectStatus.Done)
+                    {
+                        databaseContext.Tasks.Attach(item);
+                        item.MissionStatus = EntityLayer.Enums.MissionStatus.Done;
+                    }
+                    if (status == ProjectStatus.TimeOut)
+                    {
+                        databaseContext.Tasks.Attach(item);
+                        item.MissionStatus = EntityLayer.Enums.MissionStatus.Timeout;
+                    }
+
+                }
+
+                databaseContext.SaveChanges();
+
+                return projectId;
+            }
+        }
+
+        public List<Project> GetAllProcessProject()
+        {
+            using (var databaseContext = new Context())
+            {
+                return databaseContext.Projects.Include(p => p.Tasks).Where(p => p.ProjectStatus == EntityLayer.Enums.ProjectStatus.Process).OrderBy(p => p.Id).ToList();
             }
         }
     }

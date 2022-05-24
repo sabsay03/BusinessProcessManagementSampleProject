@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete;
+using EntityLayer.Enums;
 using EntityLayer.Models;
 using PagedList.Core;
 using System;
@@ -17,9 +18,16 @@ namespace EntityLayer.Repositories
 
         Tuple<List<MissionModel>, int> GetMissionByProjectId(int projectId, int pagenumber, int pageSize, string searchFilter);
         IPagedList<MissionModel> GetMissionForMember(int memberId, int pageNumber, int pageSize, string searchFilter);
+        List<Mission> GetAllWaitingProcessMission();
+
+        List<Mission> GetProjectMissionForMember(int memberUd, int projectId);
+        List<Mission> GetAllProjectMission(int projectId);
+
+        List<Mission> GetsWaitingProcessMission();
 
         int SaveMission(MissionModel missionModel);
         int UpdateMission(MissionModel missionModel);
+        int UpdateMissionStatus(int missionId,MissionStatus status);
         int UpdateForFinishMission(int missionId, string filePath);
 
         int UpdatForExtraTime(int missionId, string feedBack, DateTime endDate, DateTime startDate);

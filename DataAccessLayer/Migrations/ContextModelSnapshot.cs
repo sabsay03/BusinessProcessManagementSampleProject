@@ -19,7 +19,7 @@ namespace DataAccessLayer.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EntityLayer.Concrete.Comment", b =>
+            modelBuilder.Entity("EntityLayer.Concrete.CommentLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,23 +29,26 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MemberId")
+                    b.Property<int?>("MissionId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TaskId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("commentType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("MemberId");
-
                     b.HasIndex("MissionId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Comments");
                 });
@@ -392,21 +395,21 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("EntityLayer.Concrete.Comment", b =>
+            modelBuilder.Entity("EntityLayer.Concrete.CommentLog", b =>
                 {
-                    b.HasOne("EntityLayer.Concrete.User", "Member")
-                        .WithMany("comments")
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EntityLayer.Concrete.Mission", "Mission")
                         .WithMany("Comments")
                         .HasForeignKey("MissionId");
 
-                    b.Navigation("Member");
+                    b.HasOne("EntityLayer.Concrete.Project", "Project")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Mission");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Mission", b =>
@@ -541,6 +544,8 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("EntityLayer.Concrete.Project", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("ProjectMembers");
 
                     b.Navigation("Tasks");
@@ -548,8 +553,6 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("EntityLayer.Concrete.User", b =>
                 {
-                    b.Navigation("comments");
-
                     b.Navigation("ProjectMembers");
 
                     b.Navigation("Tasks");

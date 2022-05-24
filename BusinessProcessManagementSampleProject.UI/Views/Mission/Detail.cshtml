@@ -49,23 +49,26 @@
         @if (Model.Mission.FilePath != null)
         {
             <label for="inputUserName" class="font-weight-bold">Gönderilen Dosya yolu</label>
-            <label type="text" class="form-control" id="inputTitle">@Model.Mission.FilePath</label>
+            <label type="text" class="form-control" id="inputTitle"><a href="@Model.Mission.FilePath" target="_blank">Tıklayınız...</a></label>
         }
+
+        @if (Model.Mission.FeedBack != null)
+        {
+            <label for="inputUserName" class="font-weight-bold">Geri Dönüş Yorumu</label>
+            <label type="text" class="form-control" id="inputTitle">@Model.Mission.FeedBack</label>
+        }
+
     </div>
     @if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Process)
     {
         <div class="row">
             <div class="col-md-12 rosetteLinkList">
                 <div data-tab-id="tab1" class="col-md-12" style="text-align:center"><a class="font-weight-bold">Görevi Gönder</a></div>
-                <div data-tab-id="tab2" class="col-md-12" style="text-align:center"><a class="font-weight-bold">Geri Dönüş</a></div>
             </div>
         </div>
     }
     else if (Model.Mission.MissionStatus == EntityLayer.Enums.MissionStatus.Done)
-    { <div class="row">
-
-            <div data-tab-id="tab2" class="col-md-12" style="text-align:center"><a class="font-weight-bold">Geri Dönüş</a></div>
-        </div>
+    { 
     }
     else
     {
@@ -81,11 +84,7 @@
                 <button type="button" onclick="send()" class="btn btn-success w-100"><h3>Gönder</h3></button>
             </form>
         </div>
-        <div class="row" data-id="tab2" id="tab2div">
-            <label for="inputUserName" class="font-weight-bold">Geri Dönüş Yorumu</label>
-            <label type="text" class="form-control" id="inputTitle">@Model.Mission.FeedBack</label>
-            <button type="button" onclick="send()" class="btn btn-success w-100"><h3>Gönder</h3></button>
-        </div>
+
     </div>
 </div>
 

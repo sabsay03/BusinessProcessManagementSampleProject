@@ -21,8 +21,6 @@ namespace EntityLayer.Concrete
 
         public ICollection<ProjectMember> ProjectMembers { get; set; }
         public ICollection<Mission> Tasks { get; set; }
-        public ICollection<Comment> comments { get; set; }
-
 
 
 

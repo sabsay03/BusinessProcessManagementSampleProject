@@ -18,13 +18,18 @@ namespace BusinessLayer.Handler
         private readonly IProjectMemberRepository projectMemberRepository;
         private readonly IMissionRepository missionRepository;
         private readonly IProjectRequestRepository projectRequestRepository;
+        private readonly ICommentLogRepository commentLogRepository;
+        private readonly IUserRepository userRepository;
 
-        public ProjectHandler(IProjectRepository projectRepository, IProjectMemberRepository projectMemberRepository,IMissionRepository missionRepository,IProjectRequestRepository projectRequestRepository)
+
+        public ProjectHandler(IProjectRepository projectRepository, IProjectMemberRepository projectMemberRepository,IMissionRepository missionRepository,IProjectRequestRepository projectRequestRepository,ICommentLogRepository commentLogRepository,IUserRepository userRepository)
         {
             this.projectRepository = projectRepository;
             this.projectMemberRepository = projectMemberRepository;
             this.missionRepository = missionRepository;
             this.projectRequestRepository = projectRequestRepository;
+            this.commentLogRepository = commentLogRepository;
+            this.userRepository = userRepository;
         }
         public Tuple<List<UserDetailedModel>,int> GetMembersOfProject(int projetId, int pagenumber, int pageSize, string searchFilter)
         {
@@ -57,6 +62,18 @@ namespace BusinessLayer.Handler
             {
                 return new MessageResponse { Success = false, Message = "Öğrenci Zaten Projede Tanımlanmıştır" };
             }
+            var project = GetById(projectMember.ProjecId);
+            var user = userRepository.GetUserById(projectMember.MemberId);
+
+            CommentLog log = new CommentLog
+            {
+                ProjectId = project.Id,
+                Date = DateTime.Now,
+                Text = ($"{user.FirstName} {user.LastName} öğrencisi {project.Title} İsimli Projeye dahil olmuştur."),
+                commentType = EntityLayer.Enums.CommentType.Done
+            };
+            commentLogRepository.CreateCommentLog(log);
+
             projectMemberRepository.SaveProjectMember(projectMember);
             return new MessageResponse { Success = true, Message = "Öğrenci Projeye Tanımlanmıştır" };
 
@@ -97,6 +114,17 @@ namespace BusinessLayer.Handler
 
         public int DeleteProject(int id)
         {
+            var project = GetById(id);
+
+            CommentLog log = new CommentLog
+            {
+                ProjectId = project.Id,
+                Date = DateTime.Now,
+                Text = ($"{project.Title} İsimli Proje İptal olmuştur."),
+                commentType = EntityLayer.Enums.CommentType.Cancel
+            };
+            commentLogRepository.CreateCommentLog(log);
+
             return projectRepository.DeleteProject(id);
         }
 
@@ -117,7 +145,7 @@ namespace BusinessLayer.Handler
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 CreateDate = project.CreateDate,
-                ManagerId = project.ManagerId,
+                ManagerId = (int)project.ManagerId,
                 ProjectStatusString = getProjectStatusString(project.ProjectStatus),
                 Manager=project.Manager,
                 FilePath=project.FilePath
@@ -166,6 +194,21 @@ namespace BusinessLayer.Handler
         {
             var requests = projectRepository.GetProjectRequestsForManager(managerId, pageNumber, pageSize, searchFilter);
 
+            foreach (var item in requests)
+            {
+                if (item.ProjectRequestStatus==EntityLayer.Enums.ProjectRequestStatus.Approved)
+                {
+                    item.ProjectRequestStatusString = "Onaylanmış";
+                }else if (item.ProjectRequestStatus == EntityLayer.Enums.ProjectRequestStatus.Waiting)
+                {
+                    item.ProjectRequestStatusString = "Onay Bekleniyor";
+                }
+                else
+                {
+                    item.ProjectRequestStatusString = "Red Edildi";
+                }
+            }
+
             return requests;
         }
 
@@ -195,8 +238,29 @@ namespace BusinessLayer.Handler
 
         public MessageResponse CompleteProject(int projectId)
         {
+            var project = GetById(projectId);
+
+            CommentLog log = new CommentLog
+            {
+                ProjectId = project.Id,
+                Date = DateTime.Now,
+                Text = ($"{project.Title} İsimli Proje Tamamlanmıştır."),
+                commentType = EntityLayer.Enums.CommentType.Done
+            };
+
+            commentLogRepository.CreateCommentLog(log);
             projectRepository.UpdateProjectForComplete(projectId);
             return new MessageResponse { Success = true, Message = "Proje Tamamlanmıştır." };
+        }
+
+        public int DeniedMember(int projectId, int memberId)
+        {
+            return projectMemberRepository.DeniedMember(projectId,memberId);
+        }
+
+        public int updateMemberRequest(int projectId, int memberId)
+        {
+            return projectMemberRepository.updateMemberRequest(projectId, memberId);
         }
     }
 }
