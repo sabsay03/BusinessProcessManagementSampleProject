@@ -51,6 +51,12 @@ namespace DataAccessLayer.Repositories
                     ProjectStatus = EntityLayer.Enums.ProjectStatus.Active
                 };
 
+                if (DateTime.Now>model.StartDate)
+                {
+                    model.ProjectStatus = EntityLayer.Enums.ProjectStatus.Process;
+
+                }
+
                 databaseContext.Projects.Add(model);
                 databaseContext.SaveChanges();
 

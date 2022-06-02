@@ -196,6 +196,11 @@ namespace DataAccessLayer.Repositories
                     MissionStatus = EntityLayer.Enums.MissionStatus.Waiting
                 };
 
+                if (DateTime.Now > model.StartDate)
+                {
+                    model.MissionStatus = EntityLayer.Enums.MissionStatus.Process;
+                }
+
                 databaseContext.Tasks.Add(model);
                 databaseContext.SaveChanges();
 
